@@ -1,12 +1,11 @@
 {% load pwa %}
-{% load static %}
-{% progressive_web_app_meta %}
 <head>
-
+  {% load static %}
+  {% progressive_web_app_meta %}
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Knight Bootstrap Template - Index</title>
+  <title>GBlack Store</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -76,7 +75,7 @@
 
           <li class="drop-down"><a href="#conta ">Conta</a>
             <ul>
-              <li><a href="  #conta">Minha conta</a></li>
+              <li><a href="  {% url 'conta' %}">Minha conta</a></li>
               <li><a href="  #carrinho">Carrinho</a></li>
 
             </ul>
@@ -84,7 +83,7 @@
 <!--          {% else %}-->
           <li class="drop-down"><a href="#conta ">Cadastrar-se</a>
             <ul>
-              <li><a href="  #conta">Criar</a></li>
+              <li><a href="  {% url 'conta' %}">Criar</a></li>
               <li><a href="  #carrinho">Lembrar acesso</a></li>
 
             </ul>
@@ -96,11 +95,11 @@
 
     </div>
   </header>
-  <main id="main" >
-  {% blocks content %}
+  <section >
+    {% block conteudo%}
 
-  {% endblock %}
-  </main>
+    {% endblock %}
+  </section>
 
   {% include "blocks/footer.html" %}
 </body>
