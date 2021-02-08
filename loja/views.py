@@ -3,14 +3,25 @@ from datetime import date
 from django.contrib import messages
 from django.shortcuts import render
 
-
+from django.contrib.sessions.models import Session
+Session.objects.all().delete()
 def index(request):
+
+    return render(request, 'index.html')
+
+def conta(request):
     if request.user.is_authenticated == False:
         messages.info(request, 'Bem vindo visitante.  \n Data: {}'.format(date.today()))
     else:
         messages.info(request, 'Bem vindo {}.  \n Data: {}'.format(request.user, date.today()))
-    return render(request, 'index.html')
+    return render(request, 'conta.html')
 
+def pagamento(request):
+    if request.user.is_authenticated == False:
+        messages.info(request, 'Bem vindo visitante.  \n Data: {}'.format(date.today()))
+    else:
+        messages.info(request, 'Bem vindo {}.  \n Data: {}'.format(request.user, date.today()))
+    return render(request, 'checkout.html')
 #
 # def sobre(request):
 #     return render(request, 'sobre.html', {

@@ -1,48 +1,47 @@
-{% blocks footer %}
-{% load pwa %}
-{% load static %}
-<footer id="footer">
+{% block footer%}
+  {% load static %}
+  <footer id="footer">
 
-    <div class="footer-top">
+      <div class="footer-top">
 
-      <div class="container">
+        <div class="container">
 
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <a href="  #header" class="scrollto footer-logo"><img src="{% static 'img/hero-logo.png' %}" alt=""></a>
-            <h3>Knight</h3>
-            <p>Gostaria de saber mais antes de comprar ? Deixe aqui seu email.</p>
+          <div class="row justify-content-center">
+            <div class="col-lg-6">
+              <a href="  #header" class="scrollto footer-logo"><img src="{% static 'img/hero-logo.png' %}" alt=""></a>
+              <h3>Knight</h3>
+              <p>Gostaria de saber mais antes de comprar ? Deixe aqui seu email.</p>
+            </div>
           </div>
-        </div>
 
-        <div class="row footer-newsletter justify-content-center">
-          <div class="col-lg-6">
-            <form action="" method="post">
-              <input type="email" name="email" placeholder="Enter your Email"><input type="submit" value="Subscribe">
-            </form>
+          <div class="row footer-newsletter justify-content-center">
+            <div class="col-lg-6">
+              <form action="" method="post">
+                <input type="email" name="email" placeholder="Enter your Email"><input type="submit" value="Subscribe">
+              </form>
+            </div>
           </div>
+
+          <div class="social-links">
+            <a href="  #" class="twitter"><i class="bx bxl-twitter"></i></a>
+            <a href="  #" class="facebook"><i class="bx bxl-facebook"></i></a>
+            <a href="  #" class="instagram"><i class="bx bxl-instagram"></i></a>
+            <a href="  #" class="google-plus"><i class="bx bxl-skype"></i></a>
+            <a href="  #" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+          </div>
+
         </div>
+      </div>
 
-        <div class="social-links">
-          <a href="  #" class="twitter"><i class="bx bxl-twitter"></i></a>
-          <a href="  #" class="facebook"><i class="bx bxl-facebook"></i></a>
-          <a href="  #" class="instagram"><i class="bx bxl-instagram"></i></a>
-          <a href="  #" class="google-plus"><i class="bx bxl-skype"></i></a>
-          <a href="  #" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+      <div class="container footer-bottom clearfix">
+        <div class="copyright">
+          &copy; Copyright <strong><span>Gblack 2021</span></strong>. Todos os Direitos Reservados
         </div>
-
+        <div class="credits">
+          Desenvolvido por <a href="  https://www.linkedin.com/in/guilhermeblack/">Guilherme S. Pereira</a>
+        </div>
       </div>
-    </div>
-
-    <div class="container footer-bottom clearfix">
-      <div class="copyright">
-        &copy; Copyright <strong><span>Gblack </span></strong>. Todos os Direitos Reservados
-      </div>
-      <div class="credits">
-        Desenvolvido por <a href="  https://www.linkedin.com/in/guilhermeblack/">Guilherme S. Pereira</a>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
+    </footer><!-- End Footer -->
 
   <a href="  #" class="back-to-top"><i class="icofont-simple-up"></i></a>
 
