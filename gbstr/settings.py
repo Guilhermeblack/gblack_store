@@ -51,6 +51,11 @@ INSTALLED_APPS = [
     'django_pagarme',
     # 'django-heroku'
 ]
+LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_URL = '/'
+
+LOGIN_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
