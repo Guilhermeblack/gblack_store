@@ -1,13 +1,56 @@
 from datetime import date
-
+from loja import forms,models
+from gbstr import settings
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.contrib.auth import authenticate, login
+import validate_docbr as docbr
+from django.contrib.auth.hashers import make_password, check_password, BCryptPasswordHasher, pbkdf2
+from django.contrib.auth import logout, login, authenticate, get_user
+from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.models import Permission
+from pprint import pprint
+from django.views.decorators.csrf import csrf_protect
 
 from django.contrib.sessions.models import Session
-Session.objects.all().delete()
+# Session.objects.all().delete()
 def index(request):
+    if request.POST:
+        rq = request.POST
+    # print(' >>>', request.POST)
+        if 'senha_rep' in rq:
+            if docbr.validate_docs(cpf=rq['cpf'], repeated_digits=False):
+                password = make_password(rq['senha'], salt=None, hasher='pbkdf2_sha256')
+                models.Cliente.create_user( rq['nome'], email=rq['email'], senha=password, telefone=rq['telefone'], cpf=rq['cpf'] )
+                user = authenticate(
+                    username=rq['nome'],
+                    password=check_password(rq['senha'])
+                )
 
-    return render(request, 'index.html')
+                if user is not None:
+                    login(request, user)
+                    return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+            else:
+                messages.info(request, 'CPF/CNPJ inválidos')
+                return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+        elif 'nome_log' in rq:
+            user = authenticate(
+                username=rq['nome_log'],
+                password=check_password(rq['senha'])
+            )
+
+            if user is not None:
+                login(request, user)
+                return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+            else:
+                messages.info(request, 'Usuário inexistente/Bloqueado')
+                return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+
+
+
+    # if request.user.is_authenticated:
+    return render(request, 'index.html',
+                              {'criar': forms.cria_usr})
 
 def conta(request):
     if request.user.is_authenticated == False:

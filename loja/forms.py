@@ -1,63 +1,56 @@
+from django import forms
+from django.contrib.auth import get_user
+from . import models
+
+class autForm(forms.ModelForm):
+
+    class Meta:
+        model= models.Cliente
+        fields = ['email', 'telefone', 'cpf', 'nome', 'senha']
+        name= 'logform'
+    senha = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'senha'}))
+    nome = forms.CharField()
+    cpf = forms.CharField()
+    telefone = forms.CharField()
+    email = forms.CharField()
 #
-# class autForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = models.logform
-#         fields = ('nome', 'senha')
-#
-#     nome = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'nome'}))
-#     senha = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'senha'}))
-#
-#
+class cria_usr(forms.ModelForm):
+
+    class Meta:
+        model = models.Cliente
+        fields = ['loja', 'nome', 'senha', 'telefone', 'email', 'cpf']
+        name= 'cria_usr'
+    nome = forms.CharField()
+    cpf = forms.CharField()
+    telefone = forms.CharField()
+    loja = forms.CharField()
+    senha = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'senha'}))
+    email = forms.CharField()
+# #
+# #
 # class produto(forms.ModelForm):
 #
 #     class Meta:
-#         model = models.Produtocad
-#         fields = 'nome','descricao','preco','tipo','img_prod'
+#         model = models.Produto
+#         fields = ['nome','descricao','preco','tipo','img_prod']
 #
 #     nome = forms.CharField()
 #     descricao = forms.CharField()
 #     # preco = forms.DecimalField(decimal_places=2)
 #     tipo = forms.ChoiceField(choices=(
-#         ("A", "Alimento"),
-#         ("B", "Bebida")
+#         models.Produto.STATUS_CHOICES
 #     ))
 #
 #
-# class pedidos(forms.ModelForm):
+# class carrinho(forms.ModelForm):
 #
 #     class Meta:
-#         model = models.Pedido
-#         fields = 'comandaref','produtosPed','observacao','quantidade','status','valor'
-#         name= 'soupedido'
-#
-#         widgets = {
-#             'observacao': forms.Textarea(attrs={'rows': 3, 'cols': 27}),
-#
-#             'status': forms.HiddenInput(),
-#             'valor': forms.HiddenInput()
-#         }
+#         model = models.Carrinho
+#         fields = 'cliente_cli','valor'
+#         name= 'logform'
+
 #
 #     def __init__(self, *args, **kwargs):
 #         super(pedidos, self).__init__(*args, **kwargs)
 #         self.fields['produtosPed'].label =''
-#
-# class comandas(forms.ModelForm):
-#
-#     class Meta:
-#         model = models.Comanda
-#         fields = 'nome',"n_mesa",'valor'
-#         name = 'soucomanda'
-#
-#     nome = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'cliente'})),
-#     valor= forms.FloatField(widget=forms.HiddenInput())
-#
-#
-# class mov(forms.ModelForm):
-#
-#     class Meta:
-#
-#         model = models.movi
-#         fields = {'movimento'}
-#         name = 'alteraMov'
-#
+

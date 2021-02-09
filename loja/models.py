@@ -7,42 +7,48 @@ class Cliente(models.Model):
     class Meta:
         permissions = [
             ('adicionar_prod', 'Adicionar produto'),
-            ('pagar_prod', 'Pagar produtos'),
-
+            ('pagar_prod', 'Pagar produtos')
         ]
-
         # app_label = 'Cliente'
 
-
     id = models.AutoField(primary_key=True),
-
+    tipo_loja= (
+        ("L", 'representande de loja'),
+        ("C", 'Cliente')
+    ),
+    loja = models.CharField(
+        max_length=1,
+        choices=tipo_loja,
+        blank=False,
+        default='C',
+        null=False
+    ),
     nome = models.CharField(
         max_length=50,
         null=False,
-        blank=False,
-        default='gerente'
+        blank=False
     ),
     senha = models.CharField(
         max_length=50,
         null=False,
-        blank=False,
+        blank=False
     ),
     telefone = models.CharField(
         max_length=20,
         null=False,
-        blank=False,
+        blank=False
 
     ),
     email = models.CharField(
         max_length=35,
         null=False,
-        blank=False,
+        blank=False
 
     ),
     cpf = models.CharField(
         max_length=16,
         null=False,
-        blank=False,
+        blank=False
 
     ),
 
@@ -50,38 +56,38 @@ class Cliente(models.Model):
 
 class Produto(models.Model):
 
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True),
 
 
     nome = models.CharField(
         max_length=50,
         null=False,
         blank=False
-    )
+    ),
     descricao = models.TextField(
         max_length=255,
         null=False,
         blank=False
-    )
+    ),
     preco = models.FloatField(
         null=False,
         blank=False,
         default=0.0
-    )
+    ),
 
-    img_prod = CloudinaryField()
+    img_prod = CloudinaryField(),
 
     STATUS_CHOICES = (
         ("R", "Relogio"),
         ("A", "Acessorio"),
         ("v", "Vesturaio"),
-    )
+    ),
     tipo = models.CharField(
         max_length=1,
         choices=STATUS_CHOICES,
         blank=False,
         null=False
-    )
+    ),
 
     # def __str__(self):
     #     return self.nome
