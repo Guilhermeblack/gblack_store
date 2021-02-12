@@ -16,6 +16,7 @@ django-pagarme==0.25
 django-phonenumber-field==5.0.0
 django-pwa==1.0.10
 Flask==1.1.2
+gunicorn==20.0.4
 idna==2.10
 itsdangerous==1.1.0
 Jinja2==2.11.3
