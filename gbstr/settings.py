@@ -15,6 +15,7 @@ import cloudinary  # cloudinary
 import cloudinary.uploader  # cloudinary
 import cloudinary.api  # cloudinary
 import django_heroku
+import django_heroku
 
 import os
 
@@ -158,7 +159,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/static/')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/')
+STATIC_ROOT = os.path.join(BASE_DIR, '../staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/')
 
 
 
