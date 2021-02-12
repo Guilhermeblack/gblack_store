@@ -57,6 +57,13 @@ LOGIN_URL = '/'
 
 LOGIN_REDIRECT_URL = '/'
 
+MIDDLEWARE_CLASSES = (
+
+    'whitenoise.middleware.WhiteNoiseMiddleware'
+)
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
