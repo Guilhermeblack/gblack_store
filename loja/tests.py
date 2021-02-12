@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.test import TestCase
 
-from .views import  index
+from . import views, models
 
 
 # importa a funçao ou classe a ser testada
@@ -9,17 +9,33 @@ from .views import  index
 class testRenders(TestCase):
 
     def testIndex(self):
-        if self.client.get(index).status_code == 200:
+        if self.client.get(views.index).status_code == 200:
             return self.assertTemplateUsed('index.html')
 
-#     def testLog(self):
-#         if self.client.post(loguin, {
-#             'nome':'gerente',
+    def testCriausr(self):
+        if self.client.post(views.index, {
+            'nome': 'joao',
+            'email':'joao@bolao',
+            'senha':'prontoadmin',
+            'telefone': '9999-9999',
+            'senha_rep':'prontoadmin',
+            'cpf':'14407486'
+
+            # 'senha': make_password('prontoadmin', salt=None, hasher='pbkdf2_sha256')
+        }).status_code == 200:
+
+            # self.client.force_login(models.Cliente.objects.get_or_create(username='josé')[0])
+            return self.assertTemplateUsed('index')
 #
-#             'senha': make_password('prontoadmin', salt=None, hasher='pbkdf2_sha256')
-#         }).status_code == 200:
-#             return self.assertTemplateUsed('adm')
-#
+    def testLogin(self):
+        if self.client.post(views.index, {
+            'nome_log': 'joao',
+            'senha': 'prontoadmin',
+
+            # 'senha': make_password('prontoadmin', salt=None, hasher='pbkdf2_sha256')
+        }).status_code == 200:
+            return self.assertTemplateUsed('index')
+
 # class testStatusMovimento(TestCase):
 #
 #     #teste do ajax

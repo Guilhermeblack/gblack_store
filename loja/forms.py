@@ -1,45 +1,45 @@
 from django import forms
 from django.contrib.auth import get_user
 from . import models
+from cloudinary.models import CloudinaryField
 
 class autForm(forms.ModelForm):
 
     class Meta:
         model= models.Cliente
-        fields = ['email', 'telefone', 'cpf', 'nome', 'senha']
+        fields = ['nome_log', 'senha']
         name= 'logform'
     senha = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'senha'}))
-    nome = forms.CharField()
-    cpf = forms.CharField()
-    telefone = forms.CharField()
-    email = forms.CharField()
+    nome_log = forms.CharField()
+
 #
 class cria_usr(forms.ModelForm):
 
     class Meta:
         model = models.Cliente
-        fields = ['loja', 'nome', 'senha', 'telefone', 'email', 'cpf']
-        name= 'cria_usr'
+        fields = ['cpf', 'email', 'nome', 'senha','senha_rep', 'telefone']
+        # name= 'cria_usr'
     nome = forms.CharField()
     cpf = forms.CharField()
     telefone = forms.CharField()
-    loja = forms.CharField()
+    # loja = forms.CharField()
     senha = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'senha'}))
+    senha_rep = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'repetir senha'}))
     email = forms.CharField()
 # #
 # #
-# class produto(forms.ModelForm):
-#
-#     class Meta:
-#         model = models.Produto
-#         fields = ['nome','descricao','preco','tipo','img_prod']
-#
-#     nome = forms.CharField()
-#     descricao = forms.CharField()
-#     # preco = forms.DecimalField(decimal_places=2)
-#     tipo = forms.ChoiceField(choices=(
-#         models.Produto.STATUS_CHOICES
-#     ))
+class produtoform(forms.ModelForm):
+
+    class Meta:
+        model = models.Produto
+        fields = ['descricao','img_prod','nome','preco','tipo']
+
+    # nome = forms.CharField()
+    # descricao = forms.TextField(attrs={'rows': 3, 'cols': 10})
+    # preco = forms.CharField()
+    # img_prod = CloudinaryField()
+    # tipo = forms.ChoiceField(choices=models.Produto.STATUS_CHOICES)
+
 #
 #
 # class carrinho(forms.ModelForm):
