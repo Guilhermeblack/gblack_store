@@ -10,47 +10,83 @@ from django.contrib.auth import logout, login, authenticate, get_user
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.models import Permission
 from pprint import pprint
+import cloudinary
+import django_pagarme
 from django.views.decorators.csrf import csrf_protect
 
 from django.contrib.sessions.models import Session
 # Session.objects.all().delete()
+
 def index(request):
     if request.POST:
         rq = request.POST
     # print(' >>>', request.POST)
-        if 'senha_rep' in rq:
-            if docbr.validate_docs(cpf=rq['cpf'], repeated_digits=False):
+        pprint(request.POST)
+        if 'senha_rep' in rq and rq['senha_rep'] == rq['senha']:
+            doc = [(docbr.CPF, rq['cpf'])]
+            if docbr.validate_docs(doc):
+                # print('validooou')
                 password = make_password(rq['senha'], salt=None, hasher='pbkdf2_sha256')
-                models.Cliente.create_user( rq['nome'], email=rq['email'], senha=password, telefone=rq['telefone'], cpf=rq['cpf'] )
-                user = authenticate(
-                    username=rq['nome'],
-                    password=check_password(rq['senha'])
-                )
-
-                if user is not None:
-                    login(request, user)
-                    return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+                usr = forms.cria_usr(rq)
+                usr['senha'].value = password
+                # print(usr.errors)
+                if usr.is_valid():
+                    cli = usr.save()
+                    login(request,cli)
+                    print('logou')
+                return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
             else:
                 messages.info(request, 'CPF/CNPJ inválidos')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
         elif 'nome_log' in rq:
-            user = authenticate(
-                username=rq['nome_log'],
-                password=check_password(rq['senha'])
-            )
+            encod = models.Cliente.objects.all()
+            pprint(encod)
+            encod = encod.filter(senha=rq['senha'])
+            encod = encod.get(nome=rq['nome_log'])
 
-            if user is not None:
-                login(request, user)
+            pprint(encod.senha)
+
+            if encod is not None:
+                login(request, encod)
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
             else:
                 messages.info(request, 'Usuário inexistente/Bloqueado')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+        elif 'descricao' in rq:
+            # rq['img_prod'] = 'gbstr/'+rq['img_prod']
+            pprint(request.FILES)
+
+            if request.FILES:
+                rf = request.FILES
+                prod = forms.produtoform(rq,rf)
+                pprint(prod)
+                print('produto aqqq')
+            else:
+                prod = forms.produtoform(rq)
+            pprint(prod)
+            if prod.is_valid():
+
+                cloudinary.uploader.upload(rf['img_prod'], folder="gbstr")
+                prod.save()
+                print('salvo prod')
+                messages.info(request, 'Produto cadastrado')
+            else:
+                print(prod.errors)
+            return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+
 
 
 
     # if request.user.is_authenticated:
-    return render(request, 'index.html',
-                              {'criar': forms.cria_usr})
+    return render(request,
+                  'index.html',
+                  {
+                    'criar': forms.cria_usr,
+                    'logar': forms.autForm,
+                    'prod': forms.produtoform,
+                    'produtos':models.Produto.objects.all(),
+                    'prodtipo': models.Produto.STATUS_CHOICES
+                  })
 
 def conta(request):
     if request.user.is_authenticated == False:
@@ -66,6 +102,13 @@ def pagamento(request):
         messages.info(request, 'Bem vindo {}.  \n Data: {}'.format(request.user, date.today()))
     return render(request, 'checkout.html')
 #
+
+@login_required(login_url='index')
+def logoutuser(request):
+    logout(request)
+    return redirect('index')
+
+
 # def sobre(request):
 #     return render(request, 'sobre.html', {
 #         'user': request.user,
@@ -133,10 +176,7 @@ def pagamento(request):
 #     return redirect('index')
 #
 #
-# @login_required(login_url='loguin')
-# def logoutuser(request):
-#     logout(request)
-#     return redirect('index')
+
 #
 #
 # # @permission_required('ver_feed')

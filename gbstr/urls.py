@@ -12,7 +12,7 @@ urlpatterns = [
     path('', include('pwa.urls')),
     path('conta', views.conta, name='conta'),
     path('pagamento', views.pagamento, name='pagamento'),
-    # path('feed', views.feed, name='feed'),
+    path('logout', views.logoutuser, name='logout'),
     # path('ped', views.ped, name='pedidos'),
     # path('adm', views.adm, name='administrador'),
     # path('profile', views.profile, name='profile'),

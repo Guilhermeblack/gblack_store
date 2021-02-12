@@ -1,93 +1,122 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.utils.timezone import now
+from django.utils.translation import ugettext as _
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 
-class Cliente(models.Model):
+# class User_cria(PermissionsMixin, BaseUserManager):
+#
+#     def create_user(self, *args, **kwargs):
+#         email = kwargs["nome"]
+#         email = self.normalize_email(email)
+#         password = kwargs["password"]
+#         kwargs.pop("password")
+#
+#         if not email:
+#             raise ValueError(_('sem nome válido'))
+#
+#         user = self.model(**kwargs)
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
+#
+#
+#     def create_superuser(self, *args, **kwargs):
+#         user = self.create_user(**kwargs)
+#         user.is_superuser = True
+#         user.save(using=self._db)
+#         return user
+
+
+class Cliente( PermissionsMixin, AbstractBaseUser):
 
     class Meta:
         permissions = [
             ('adicionar_prod', 'Adicionar produto'),
-            ('pagar_prod', 'Pagar produtos')
+            ('pagar_prod', 'Pagar produtos'),
+            ('uai', 'te4s')
         ]
         # app_label = 'Cliente'
 
-    id = models.AutoField(primary_key=True),
-    tipo_loja= (
-        ("L", 'representande de loja'),
-        ("C", 'Cliente')
-    ),
-    loja = models.CharField(
-        max_length=1,
-        choices=tipo_loja,
-        blank=False,
-        default='C',
-        null=False
-    ),
+    id = models.AutoField(primary_key=True)
+    loja = models.BooleanField(default=False)
+
     nome = models.CharField(
         max_length=50,
         null=False,
-        blank=False
-    ),
+        blank=False,
+        unique=True,
+        # default='some_val'
+    )
     senha = models.CharField(
         max_length=50,
-        null=False,
-        blank=False
-    ),
+        null=True,
+        blank=False,
+    )
     telefone = models.CharField(
         max_length=20,
-        null=False,
-        blank=False
+        null=True,
+        blank=False,
 
-    ),
+    )
     email = models.CharField(
         max_length=35,
-        null=False,
-        blank=False
+        null=True,
+        blank=False,
 
-    ),
+    )
     cpf = models.CharField(
         max_length=16,
-        null=False,
-        blank=False
+        null=True,
+        blank=False,
+        unique=True,
 
-    ),
+    )
+    data = models.DateTimeField(auto_now_add=True, blank=True)
+    USERNAME_FIELD = 'nome'
+    REQUIRED_FIELDS = ['senha', 'cpf']
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
 
-    objects = models.Manager()
+    # objects = UserManager()
 
 class Produto(models.Model):
 
-    id = models.AutoField(primary_key=True),
+    id = models.AutoField(primary_key=True)
 
 
     nome = models.CharField(
         max_length=50,
         null=False,
         blank=False
-    ),
-    descricao = models.TextField(
-        max_length=255,
+    )
+    descricao = models.CharField(
+        max_length=100,
         null=False,
         blank=False
-    ),
+    )
     preco = models.FloatField(
         null=False,
         blank=False,
         default=0.0
-    ),
+    )
 
-    img_prod = CloudinaryField(),
+    img_prod = CloudinaryField()
 
     STATUS_CHOICES = (
         ("R", "Relogio"),
         ("A", "Acessorio"),
         ("v", "Vesturaio"),
-    ),
+    )
     tipo = models.CharField(
         max_length=1,
         choices=STATUS_CHOICES,
         blank=False,
         null=False
-    ),
+    )
+    data = models.DateTimeField(auto_now_add=True, blank=True)
 
     # def __str__(self):
     #     return self.nome
@@ -115,6 +144,7 @@ class Carrinho(models.Model):
         blank=True
 
     )
+    data = models.DateTimeField(auto_now_add=True, blank=True)
 
     objects = models.Manager()
 
@@ -262,7 +292,9 @@ class Pagamentos(models.Model):
         null=False,
         blank=True
     )
-
+    # is_active = models.BooleanField(default=True)
+    # is_admin = models.BooleanField(default=False)
+    # is_staff = models.BooleanField(default=False)
     data = models.DateTimeField(auto_now_add=True, blank=True)
 
     # def __str__(self):
