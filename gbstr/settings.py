@@ -18,9 +18,8 @@ import django_heroku
 
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
 import django
-django.setup()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -32,7 +31,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'jz91+(t=#6sdlnsykv)b*f#op@-qv1j22=x-xg)hc$q7_8kurc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -64,6 +63,8 @@ MIDDLEWARE_CLASSES = (
 
     'whitenoise.middleware.WhiteNoiseMiddleware'
 )
+
+django.setup()
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
