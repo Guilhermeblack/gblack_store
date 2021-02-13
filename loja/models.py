@@ -3,7 +3,9 @@ from cloudinary.models import CloudinaryField
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin,AbstractUser
+from django.contrib.auth.models import User
+from django.conf import settings
 
 # class User_cria(PermissionsMixin, BaseUserManager):
 #
@@ -29,7 +31,7 @@ from django.contrib.auth.models import PermissionsMixin
 #         return user
 
 
-class Cliente( PermissionsMixin, AbstractBaseUser):
+class Cliente( AbstractUser, PermissionsMixin):
 
     class Meta:
         permissions = [
@@ -39,6 +41,8 @@ class Cliente( PermissionsMixin, AbstractBaseUser):
         ]
         # app_label = 'Cliente'
 
+    # groups = models.ManyToManyField(User, related_name='grupos', blank=True)
+    # user_permissions = models.ManyToManyField(User, related_name='permissoes', blank=True)
     id = models.AutoField(primary_key=True)
     loja = models.BooleanField(default=False)
 
@@ -79,6 +83,7 @@ class Cliente( PermissionsMixin, AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     # objects = UserManager()
 
@@ -127,7 +132,7 @@ class Carrinho(models.Model):
 
     cliente_cli = models.ForeignKey(
         Cliente,
-        null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name="Cliente"
     )
@@ -136,7 +141,7 @@ class Carrinho(models.Model):
 
 
 
-    produto_cli= models.ManyToManyField(Produto, related_name='produto', blank=False)
+    produto_cli= models.ManyToManyField(Produto, related_name='produto', blank=True)
 
     valor = models.FloatField(
         default=0.0,
@@ -304,15 +309,15 @@ class Pagamentos(models.Model):
 
 
 
-class logform(models.Model):
-    senha = models.CharField(
-        max_length=80,
-        null=False,
-        blank=False,
-    )
-    nome = models.CharField(
-        max_length=80,
-        null=False,
-        blank=False,
-    )
+# class logform(models.Model):
+#     senha = models.CharField(
+#         max_length=80,
+#         null=False,
+#         blank=False,
+#     )
+#     nome = models.CharField(
+#         max_length=80,
+#         null=False,
+#         blank=False,
+#     )
 

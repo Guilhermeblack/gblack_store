@@ -20,7 +20,8 @@ import os
 
 # os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
 import django
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.conf.global_settings import DATABASES
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -50,7 +51,7 @@ INSTALLED_APPS = [
     'gbstr',
     'loja',
     'cloudinary',
-    'django_pagarme',
+    # 'django_pagarme',
     # 'django-heroku'
 ]
 LOGOUT_REDIRECT_URL = '/'
@@ -103,16 +104,23 @@ WSGI_APPLICATION = 'gbstr.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+django_heroku.settings(locals())
+
+import dj_database_url
+
+DATABASES['default'] = dj_database_url.config()
+
 
 AUTH_USER_MODEL = "loja.Cliente"
+SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E301']
 
-django_heroku.settings(locals())
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -157,23 +165,18 @@ MEDIA_URL = '/media/'
 # print(BASE_DIR)
 
 
-# STATICFILES_DIRS = ( os.path.join(BASE_DIR, '/static/'), )
 MEDIA_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/media/')
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
+
 # STATIC_ROOT = os.path.join(BASE_DIR, '../staticfiles')
 STATIC_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/static/')
 
 
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, '../gbstr/loja/static')
+# )
 
-
-
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, '../gbstr/loja/static/')
-)
 PWA_APP_NAME = 'GBlack'
 PWA_APP_DESCRIPTION = "seu produto esta aqui"
 PWA_APP_THEME_COLOR = '#0A0302'
