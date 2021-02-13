@@ -14,7 +14,6 @@ dj-static==0.0.6
 Django==3.0.8
 django-ajax==0.3.0
 django-heroku==0.3.1
-django-pagarme==0.25
 django-phonenumber-field==5.0.0
 django-pwa==1.0.10
 filelock==3.0.12
@@ -29,6 +28,7 @@ pagarme-python==4.0.1
 phonenumberslite==8.12.17
 pipenv==2020.11.15
 psycopg2==2.8.6
+psycopg2-binary==2.8.6
 pycparser==2.20
 pyOpenSSL==20.0.1
 pytz==2020.5
