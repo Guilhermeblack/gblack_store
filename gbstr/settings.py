@@ -113,12 +113,13 @@ WSGI_APPLICATION = 'gbstr.wsgi.application'
 
 import dj_database_url
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES['default'] = dj_database_url.config(default='postgres://bqutzjqhbzyeun:2a696be3f207322ebfba850995ca6ffd4f658b34664d2240a149803a9b9a4468@ec2-52-4-171-132.compute-1.amazonaws.com:5432/d185ti2fvcrrac')
 
 
 AUTH_USER_MODEL = "loja.Cliente"
 SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E301']
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
