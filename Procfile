@@ -1,1 +1,1 @@
-web: gunicorn gbstr.wsgi
+web: gunicorn gbstr.wsgi --preload

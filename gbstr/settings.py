@@ -171,9 +171,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/static/')
 
 
 # Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, '../gbstr/loja/static'),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, '../gbstr/loja/static'),
+# )
 PWA_APP_NAME = 'GBlack'
 PWA_APP_DESCRIPTION = "seu produto esta aqui"
 PWA_APP_THEME_COLOR = '#0A0302'
