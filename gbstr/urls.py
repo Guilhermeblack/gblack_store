@@ -21,4 +21,4 @@ urlpatterns = [
     path('checkout/', include('django_pagarme.urls'))
     # path('loguin/', include('urls', namespace='log')),
 
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
