@@ -154,11 +154,11 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-print(BASE_DIR)
+# print(BASE_DIR)
 
 
 # STATICFILES_DIRS = ( os.path.join(BASE_DIR, '/static/'), )
-MEDIA_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/static/')
+MEDIA_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/media/')
 
 
 # Static files (CSS, JavaScript, Images)
