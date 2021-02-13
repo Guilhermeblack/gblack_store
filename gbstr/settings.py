@@ -15,10 +15,12 @@ import cloudinary  # cloudinary
 import cloudinary.uploader  # cloudinary
 import cloudinary.api  # cloudinary
 import django_heroku
-import django_heroku
 
 import os
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
+import django
+django.setup()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -151,9 +153,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+print(BASE_DIR)
 
 
-STATICFILES_DIRS = ( os.path.join(BASE_DIR, '/static/'), )
+# STATICFILES_DIRS = ( os.path.join(BASE_DIR, '/static/'), )
 MEDIA_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/static/')
 
 
@@ -168,7 +171,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/static/')
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, '../gbstr/loja/static/'),
+    os.path.join(BASE_DIR, '../gbstr/loja/'),
 )
 PWA_APP_NAME = 'GBlack'
 PWA_APP_DESCRIPTION = "seu produto esta aqui"
