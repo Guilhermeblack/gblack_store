@@ -11,7 +11,6 @@ from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.models import Permission
 from pprint import pprint
 import cloudinary
-import django_pagarme
 from django.views.decorators.csrf import csrf_protect
 
 from django.contrib.sessions.models import Session
@@ -87,20 +86,6 @@ def index(request):
                     'produtos':models.Produto.objects.all(),
                     'prodtipo': models.Produto.STATUS_CHOICES
                   })
-
-def conta(request):
-    if request.user.is_authenticated == False:
-        messages.info(request, 'Bem vindo visitante.  \n Data: {}'.format(date.today()))
-    else:
-        messages.info(request, 'Bem vindo {}.  \n Data: {}'.format(request.user, date.today()))
-    return render(request, 'conta.html')
-
-def pagamento(request):
-    if request.user.is_authenticated == False:
-        messages.info(request, 'Bem vindo visitante.  \n Data: {}'.format(date.today()))
-    else:
-        messages.info(request, 'Bem vindo {}.  \n Data: {}'.format(request.user, date.today()))
-    return render(request, 'checkout.html')
 #
 
 @login_required(login_url='index')
