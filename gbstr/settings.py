@@ -15,7 +15,7 @@ import cloudinary  # cloudinary
 import cloudinary.uploader  # cloudinary
 import cloudinary.api  # cloudinary
 import django_heroku
-
+import psycopg2.extensions
 import os
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
@@ -32,7 +32,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'jz91+(t=#6sdlnsykv)b*f#op@-qv1j22=x-xg)hc$q7_8kurc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,7 +40,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'gbstr',
     'loja',
     'cloudinary',
-    # 'django_pagarme',
+    'django_pagarme',
     # 'django-heroku'
 ]
 LOGOUT_REDIRECT_URL = '/'
@@ -65,7 +65,7 @@ MIDDLEWARE_CLASSES = (
     'whitenoise.middleware.WhiteNoiseMiddleware'
 )
 
-django.setup()
+# django.setup()
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -103,28 +103,27 @@ WSGI_APPLICATION = 'gbstr.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+client_encoding= 'UTF8'
+timezone='America/Sao_Paulo'
+default_transaction_isolation= 'read committed'
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': '',
+        # 'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5432'
     }
 }
 
 import dj_database_url
 # DATABASES['default'] = dj_database_url.config(default='postgres://bqutzjqhbzyeun:2a696be3f207322ebfba850995ca6ffd4f658b34664d2240a149803a9b9a4468@ec2-52-4-171-132.compute-1.amazonaws.com:5432/d185ti2fvcrrac')
-# if ON_HEROKU:
-#     DATABASE_URL = 'postgresql://<postgresql>'
-# else:
-DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
-# DATABASES = {'default': dj_database_url.config(default='postgres://bqutzjqhbzyeun:2a696be3f207322ebfba850995ca6ffd4f658b34664d2240a149803a9b9a4468@ec2-52-4-171-132.compute-1.amazonaws.com:5432/d185ti2fvcrrac')}
-DATABASES['default'] =  dj_database_url.config()
+# DATABASES['default'] = dj_database_url.config()
+
 AUTH_USER_MODEL = "loja.Cliente"
-SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E301']
 
 
 
@@ -145,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -168,19 +167,25 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-print(BASE_DIR)
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, '/loja')
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, '/static/'), )
+MEDIA_ROOT = os.path.join(BASE_DIR, 'loja/static/')
 
 
-
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, '../staticfiles')
-# STATIC_ROOT = os.path.join(BASE_DIR, '/loja')
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
+
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'loja/static/'),
+)
 
 PWA_APP_NAME = 'GBlack'
 PWA_APP_DESCRIPTION = "seu produto esta aqui"
