@@ -18,7 +18,7 @@ import django_heroku
 
 import os
 
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
 import django
 from django.conf.global_settings import DATABASES
 
@@ -104,22 +104,29 @@ WSGI_APPLICATION = 'gbstr.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 import dj_database_url
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-DATABASES['default'] = dj_database_url.config(default='postgres://bqutzjqhbzyeun:2a696be3f207322ebfba850995ca6ffd4f658b34664d2240a149803a9b9a4468@ec2-52-4-171-132.compute-1.amazonaws.com:5432/d185ti2fvcrrac')
-
-
+# DATABASES['default'] = dj_database_url.config(default='postgres://bqutzjqhbzyeun:2a696be3f207322ebfba850995ca6ffd4f658b34664d2240a149803a9b9a4468@ec2-52-4-171-132.compute-1.amazonaws.com:5432/d185ti2fvcrrac')
+# if ON_HEROKU:
+#     DATABASE_URL = 'postgresql://<postgresql>'
+# else:
+DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+# DATABASES = {'default': dj_database_url.config(default='postgres://bqutzjqhbzyeun:2a696be3f207322ebfba850995ca6ffd4f658b34664d2240a149803a9b9a4468@ec2-52-4-171-132.compute-1.amazonaws.com:5432/d185ti2fvcrrac')}
+DATABASES['default'] =  dj_database_url.config()
 AUTH_USER_MODEL = "loja.Cliente"
 SILENCED_SYSTEM_CHECKS = ['fields.E300', 'fields.E301']
 
-# django_heroku.settings(locals())
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -138,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+django_heroku.settings(locals())
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -161,20 +168,19 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-# print(BASE_DIR)
+print(BASE_DIR)
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, '/loja')
 
 
 
-# STATIC_ROOT = os.path.join(BASE_DIR, '../staticfiles')
-STATIC_ROOT = os.path.join(BASE_DIR, '../gbstr/loja/static/')
+STATIC_ROOT = os.path.join(BASE_DIR, '../staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, '/loja')
 
 
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, '../gbstr/loja/static')
-# )
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
 
 PWA_APP_NAME = 'GBlack'
 PWA_APP_DESCRIPTION = "seu produto esta aqui"
