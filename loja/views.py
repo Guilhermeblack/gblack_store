@@ -73,10 +73,6 @@ def index(request):
                 print(prod.errors)
             return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
 
-
-
-
-    # if request.user.is_authenticated:
     return render(request,
                   'index.html',
                   {
@@ -93,6 +89,24 @@ def logoutuser(request):
     logout(request)
     return redirect('index')
 
+@login_required(login_url='index')
+def conta(request):
+
+
+
+    pprint(request.user.id)
+    return render(
+        request,
+        'conta.html',
+        {
+            'usuario': models.Cliente.objects.get(pk=request.user.id),
+            'carrinho': models.Carrinho.objects.filter(cliente_cli=request.user),
+            'totalpedido': models.Tot_ped.objects.all(),
+            'venda': models.Venda.objects.all(),
+            'pagamento': models.Pagamentos.objects.all(),
+
+        }
+    )
 
 # def sobre(request):
 #     return render(request, 'sobre.html', {

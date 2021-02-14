@@ -134,7 +134,7 @@ class Carrinho(models.Model):
         Cliente,
         blank=True,
         on_delete=models.CASCADE,
-        related_name="Cliente"
+        related_name="cliente_cli"
     )
 
     id = models.AutoField(primary_key=True),

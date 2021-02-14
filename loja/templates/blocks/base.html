@@ -66,7 +66,7 @@
           </li>
 
 
-          <li class="nav-logo"><a href="#"><img src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a></li>
+          <li class="nav-logo"><a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a></li>
 
             {% if user.loja == True %}
                 <li><a data-target="#newprod" data-toggle="modal" class="MainNavText" id="novoprod" href="#newprod">Novo Produto</a></li>
@@ -86,7 +86,7 @@
                 </ul>
               {% else %}
                 <ul>
-                  <li><a data-target="#logar" data-toggle="modal" class="MainNavText" id="entrarconta" href="#logar">Entrar</a></li>
+                  <li><a data-target="#logar" data-toggle="modal" class="MainNavText" id="entrarconta" href="{% url 'conta' %}#logar">Entrar</a></li>
                   <li><a data-target="#criar" data-toggle="modal" class="MainNavText" id="criarconta" href="#criar">Criar</a></li>
                   <li><a href="#carrinho">Lembrar acesso</a></li>
 
