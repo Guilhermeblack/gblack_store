@@ -6,6 +6,7 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin,AbstractUser
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # class User_cria(PermissionsMixin, BaseUserManager):
 #
@@ -99,8 +100,8 @@ class Produto(models.Model):
     )
     descricao = models.CharField(
         max_length=100,
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
     preco = models.FloatField(
         null=False,
@@ -121,6 +122,7 @@ class Produto(models.Model):
         blank=False,
         null=False
     )
+    estoque= models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10000)])
     data = models.DateTimeField(auto_now_add=True, blank=True)
 
     # def __str__(self):

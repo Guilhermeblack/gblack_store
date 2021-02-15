@@ -1,50 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 
 {% extends "blocks/base.html" %}
 {% load static %}
 {% block conteudo %}
 {% load cloudinary %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
+            <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"></span>
+            </button>
+            {{ message }}
+        </div>
+    {% endfor %}
     <!-- ======= Contact Section ======= -->
+    {% if prod and user.loja %}
+
+
     <section id="contact" class="contact section-bg">
       <div class="container">
 
         <div class="section-title">
-          <h2>Contact</h2>
-          <p>Magnam dolores commodi suscipit eius consequatur ex aliquid fuga eum quidem</p>
+          <h2>Novo Produto</h2>
+          <p>Menu exclusivo para o cadastro de produtos</p>
         </div>
-
+<!--        {{prod.nome.name}}-->
+<!--        {{prod.nome.label}}-->
         <div class="row">
 
 
 
-          <div class="col-lg mt-5 mt-lg-0">
+            <div class="col-lg mt-5 mt-lg-0">
 
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form" data-aos="fade-left">
+            <form action="{% url 'conta' %}" enctype="multipart/form-data" method="post" role="form"  data-aos="fade-left">
               <div class="form-row">
                 <div class="col-md-6 form-group">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                  <input type="text" name="nome" class="form-control" id="nome" placeholder="Nome do produto" data-rule="minlen:4" data-msg="Informe o nome do produto" />
                   <div class="validate"></div>
                 </div>
                 <div class="col-md-6 form-group">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+                  <select type="test" class="form-control" name="tipo" id="tipo"  data-rule="tipo" data-msg="Selecione um tipo" />
+                    {% for t in prodtipo %}
+                      <option value="{{t.0}}">{{t.1}}</option>
+
+                    {% endfor %}
+                  </select>
                   <div class="validate"></div>
                 </div>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+                <input type="number" class="form-control" name="preco" id="preco" placeholder="Preço" data-rule="minlen:1" data-msg="Informe o preço do produto" />
                 <div class="validate"></div>
               </div>
               <div class="form-group">
-                <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+
+                  {{prod.img_prod}}
+                <div class="validate"></div>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" name="estoque" id="estoque" placeholder="Quantidade" data-rule="minlen:1" data-msg="Informe o estoque do novo produto aqui" />
+                <div class="validate"></div>
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" name="descricao" rows="5" data-msg="Insira aqui a descrição do produto" placeholder="Descrição do produto"></textarea>
                 <div class="validate"></div>
               </div>
               <div class="mb-3">
                 <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your message has been sent. Thank you!</div>
+
               </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
+              <div class="text-center"><button type="submit">Cadastrar</button></div>
+              {% csrf_token %}
             </form>
 
           </div>
@@ -54,5 +80,121 @@
       </div>
     </section><!-- End Contact Section -->
 
+            <!-- ======= Frequently Asked Questions Section ======= -->
+    <section id="produtos" class="faq">
+      <div class="container">
 
+        <div class="section-title" data-aos="fade-up">
+          <h2>Meus Produtos</h2>
+        </div>
+
+        <ul class="faq-list">
+          {% for p in produtos %}
+            <li data-aos="fade-up" data-aos-delay="00">
+              <a data-toggle="collapse" class="collapsed" href="  #{{p.id}}">{{p.nome}}<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+              <div id="{{p.id}}" class="collapse" data-parent=".faq-list">
+                <p>
+                  Todos os dados de clientes são encriptografados em nossos servidores, e você tem total controle, pode deletá-los ou alterá-los quando quiser
+                </p>
+                <p>
+                  Seus dados bancários não passam por nossos servidores, impossibilitando que seus dados sejam roubados
+                </p>
+              </div>
+            </li>
+          {% empty %}
+            <li data-aos="fade-up">
+              <a data-toggle="collapse" class="collapsed" href="  #"><b>{{'Sem produtos até o momento'}}</b><i class="bx bx-x icon-close"></i></a>
+
+            </li>
+          {% endfor %}
+
+
+        </ul>
+
+      </div>
+    </section><!-- End Frequently Asked Questions Section -->
+
+    {% endif %}
+      <!-- ======= Pricing Section ======= -->
+    {% if user.nome == 'guidev' and user.loja == False %}
+    <section id="pricing" class="pricing section-bg">
+      <div class="container">
+
+        <div class="section-title" data-aos="fade-up">
+          <h2>Loja</h2>
+          <p>venda seus produtos</p>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+
+
+
+          <div class="col-lg-4 mt-4">
+            <div class="box recommended" data-aos="zoom-in">
+              <span class="recommended-badge">Recommended</span>
+              <h3>Habilitar-se loja</h3>
+              <h4><sup>$</sup>19<span> / Mês</span></h4>
+              <ul>
+                <li>Cadastr-se como uma loja</li>
+                <li>habilite-se para cadastrar produtos</li>
+                <li>Nulla at volutpat dola</li>
+                <li>Pharetra massa</li>
+
+              </ul>
+              <div class="btn-wrap">
+                <form method="post">
+                  {% csrf_token %}
+                  <li class="na">{{ usuario.loja }}</li>
+                  <input type="hidden" name="lojasim" value="sim" class="btn-buy">
+                  <button type="submit" class="btn-buy">Habilitar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+    </section><!-- End Pricing Section -->
+
+
+    {% endif %}
+
+        <!-- ======= Frequently Asked Questions Section ======= -->
+    <section id="faq" class="faq">
+      <div class="container">
+
+        <div class="section-title" data-aos="fade-up">
+          <h2>Meu Carrinho</h2>
+        </div>
+
+        <ul class="faq-list">
+          {% for key, p in carrinho %}
+            <li data-aos="fade-up" data-aos-delay="{{key}}00">
+              <a data-toggle="collapse" href="  #{{key}}" class="collapsed"><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+              <div id="{{key}}" class="collapse" data-parent=".faq-list">
+                {%for pro in p.produto_cli %}
+                  <p>
+                    {{pro.nome}}
+                  </p>
+                    {{pro.preco}}
+                  </p>
+                  <p>
+                    Temos todo o carinho com a embalagem e postagem de seus produtos, para que o cliente fique satisfeito com sua compra
+                  </p>
+                {%endfor%}
+              </div>
+            </li>
+          {% empty %}
+            <li data-aos="fade-up" data-aos-delay="100">
+              <a data-toggle="collapse" href="  #" class="collapsed"><b>{{'Sem produtos no carrinho até o momento'}}</b></a>
+
+            </li>
+          {% endfor %}
+        </ul>
+
+      </div>
+    </section><!-- End Frequently Asked Questions Section -->
 {% endblock %}
