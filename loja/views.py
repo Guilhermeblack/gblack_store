@@ -33,9 +33,10 @@ def index(request):
                     cli = usr.save()
                     login(request,cli)
                     print('logou')
+                    messages.info(request, ' Usuário criado')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
             else:
-                messages.info(request, 'CPF/CNPJ inválidos')
+                messages.warning(request, 'CPF/CNPJ inválidos')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
         elif 'nome_log' in rq:
             encod = models.Cliente.objects.all()
@@ -47,13 +48,44 @@ def index(request):
 
             if encod is not None:
                 login(request, encod)
+                messages.info(request, ' Bem vindo')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
             else:
                 messages.info(request, 'Usuário inexistente/Bloqueado')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
-        elif 'descricao' in rq:
+
+    return render(request,
+                  'index.html',
+                  {
+                    'criar': forms.cria_usr,
+                    'logar': forms.autForm,
+                    # 'prod': forms.produtoform,
+                    'produtos':models.Produto.objects.all(),
+                    'prodtipo': models.Produto.STATUS_CHOICES
+                  })
+#
+
+@login_required(login_url='index')
+def logoutuser(request):
+    logout(request)
+    return redirect('index')
+
+@login_required(login_url='index')
+def conta(request):
+
+    if request.POST:
+        rq = request.POST
+        pprint(rq)
+        if 'lojasim' in rq:
+            usr = models.Cliente.objects.get(pk=request.user.id)
+            usr.loja = True
+            pprint(usr)
+            usr.save()
+            messages.info(request,' Agora é uma loja')
+        elif 'tipo' in rq:
             # rq['img_prod'] = 'gbstr/'+rq['img_prod']
             pprint(request.FILES)
+            print('entro pdsadasdkasd´sadas')
 
             if request.FILES:
                 rf = request.FILES
@@ -71,39 +103,24 @@ def index(request):
                 messages.info(request, 'Produto cadastrado')
             else:
                 print(prod.errors)
+                messages.info(request, 'Produto não cadastrado')
             return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
-
-    return render(request,
-                  'index.html',
-                  {
-                    'criar': forms.cria_usr,
-                    'logar': forms.autForm,
-                    'prod': forms.produtoform,
-                    'produtos':models.Produto.objects.all(),
-                    'prodtipo': models.Produto.STATUS_CHOICES
-                  })
-#
-
-@login_required(login_url='index')
-def logoutuser(request):
-    logout(request)
-    return redirect('index')
-
-@login_required(login_url='index')
-def conta(request):
-
-
-
+    # print('foi =-=-')
     pprint(request.user.id)
+    clent = models.Cliente.objects.get(pk=request.user.id)
     return render(
         request,
         'conta.html',
         {
+            'prod': forms.produtoform,
+            # 'userform':forms.cria_usr(),
             'usuario': models.Cliente.objects.get(pk=request.user.id),
-            'carrinho': models.Carrinho.objects.filter(cliente_cli=request.user),
-            'totalpedido': models.Tot_ped.objects.all(),
-            'venda': models.Venda.objects.all(),
-            'pagamento': models.Pagamentos.objects.all(),
+            'carrinho': models.Carrinho.objects.filter(cliente_cli=clent.id),
+            # 'totalpedido': models.Tot_ped.objects.all(),
+            # 'venda': models.Venda.objects.all(),
+            'produtos': models.Produto.objects.all(),
+            # 'pagamento': models.Pagamentos.objects.all(),
+            'prodtipo': models.Produto.STATUS_CHOICES
 
         }
     )
