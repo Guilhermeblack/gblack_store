@@ -31,6 +31,11 @@ def index(request):
                 # print(usr.errors)
                 if usr.is_valid():
                     cli = usr.save()
+                    cart = models.Carrinho.objects.create(
+                        cliente_cli=cli
+                    )
+                    cart.save()
+
                     login(request,cli)
                     print('logou')
                     messages.info(request, ' Usuário criado')
@@ -60,7 +65,7 @@ def index(request):
                     'criar': forms.cria_usr,
                     'logar': forms.autForm,
                     # 'prod': forms.produtoform,
-                    'produtos':models.Produto.objects.all(),
+                    'produtos':models.Produto.objects.all().order_by('tipo'),
                     'prodtipo': models.Produto.STATUS_CHOICES
                   })
 #
@@ -125,11 +130,30 @@ def conta(request):
         }
     )
 
-# def sobre(request):
-#     return render(request, 'sobre.html', {
-#         'user': request.user,
-#     })  # enviar para as comandas
-#
+def prod(request):
+
+    if request.POST:
+        pprint(request.POST)
+        if 'add_carrinho' in request.POST:
+            qnt = request.POST['qnt_pd']
+            prod = request.POST['add_carrinho']
+            carrinho = models.Carrinho.objects.get(cliente_cli=request.user)
+            if prod not in carrinho.produto_cli:
+                carrinho.produto_cli.add(prod)
+            carrinho.valor += prod.valor
+            carrinho.save()
+            ped = models.Tot_ped.objects.create(
+                carrinho=carrinho,
+                produto_carrinho=prod
+            )
+            ped.quantidade +=1
+            ped.save()
+            print('deu tudo')
+            pass
+    return render(request, 'sobre.html', {
+        'user': request.user,
+    })  # enviar para as comandas
+
 #
 # @csrf_protect
 # def loguin(request):
