@@ -8,29 +8,6 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-# class User_cria(PermissionsMixin, BaseUserManager):
-#
-#     def create_user(self, *args, **kwargs):
-#         email = kwargs["nome"]
-#         email = self.normalize_email(email)
-#         password = kwargs["password"]
-#         kwargs.pop("password")
-#
-#         if not email:
-#             raise ValueError(_('sem nome válido'))
-#
-#         user = self.model(**kwargs)
-#         user.set_password(password)
-#         user.save(using=self._db)
-#         return user
-#
-#
-#     def create_superuser(self, *args, **kwargs):
-#         user = self.create_user(**kwargs)
-#         user.is_superuser = True
-#         user.save(using=self._db)
-#         return user
-
 
 class Cliente( AbstractUser, PermissionsMixin):
 

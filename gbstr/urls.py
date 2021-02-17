@@ -12,6 +12,7 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('conta', views.conta, name='conta'),
+    path('prod', views.prod, name='prod'),
     path('', include('pwa.urls')),
     path('logout', views.logoutuser, name='logout'),
 

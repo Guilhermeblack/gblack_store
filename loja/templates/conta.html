@@ -91,13 +91,19 @@
         <ul class="faq-list">
           {% for p in produtos %}
             <li data-aos="fade-up" data-aos-delay="00">
-              <a data-toggle="collapse" class="collapsed" href="  #{{p.id}}">{{p.nome}}<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
-              <div id="{{p.id}}" class="collapse" data-parent=".faq-list">
+              <a data-toggle="collapse" class="collapsed" href="#tab_{{p.id}}"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+              <div id="tab_{{p.id}}" class="collapse" data-parent=".faq-list">
                 <p>
-                  Todos os dados de clientes são encriptografados em nossos servidores, e você tem total controle, pode deletá-los ou alterá-los quando quiser
+                    {{p.nome}}
                 </p>
                 <p>
-                  Seus dados bancários não passam por nossos servidores, impossibilitando que seus dados sejam roubados
+                    {{p.descricao}}
+                </p>
+                <p>
+                    {{p.preco}}
+                </p>
+                <p>
+                    <img src="{{p.img_prod.url}}">
                 </p>
               </div>
             </li>
@@ -173,11 +179,11 @@
         <ul class="faq-list">
           {% for key, p in carrinho %}
             <li data-aos="fade-up" data-aos-delay="{{key}}00">
-              <a data-toggle="collapse" href="  #{{key}}" class="collapsed"><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
-              <div id="{{key}}" class="collapse" data-parent=".faq-list">
+              <a data-toggle="collapse" href="#tab_{{key}}" class="collapsed"><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+              <div id="tab_{{key}}" class="collapse" data-parent=".faq-list">
                 {%for pro in p.produto_cli %}
                   <p>
-                    {{pro.nome}}
+                    <b>{{pro.nome}}</b>
                   </p>
                     {{pro.preco}}
                   </p>
