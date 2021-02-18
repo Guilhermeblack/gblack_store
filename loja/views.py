@@ -87,6 +87,11 @@ def conta(request):
             pprint(usr)
             usr.save()
             messages.info(request,' Agora é uma loja')
+        elif 'exc_prod' in rq:
+            prod = models.Produto.objects.exclude(pk=rq['exc_prod'])
+
+            prod.save()
+            messages.info(request,' Excluido')
         elif 'tipo' in rq:
             # rq['img_prod'] = 'gbstr/'+rq['img_prod']
             pprint(request.FILES)
@@ -135,10 +140,13 @@ def prod(request):
     if request.POST:
         pprint(request.POST)
         if 'add_carrinho' in request.POST:
-            qnt = request.POST['qnt_pd']
-            prod = request.POST['add_carrinho']
-            carrinho = models.Carrinho.objects.get(cliente_cli=request.user)
-            if prod not in carrinho.produto_cli:
+            cli = models.Cliente.objects.get(id=request.user.id)
+
+            prod = models.Produto.objects.get(pk=request.POST['add_carrinho'])
+            carrinho = models.Carrinho.objects.filter(cliente_cli=cli.id)
+            pprint(carrinho)
+
+            if prod not in carrinho.produto_cli.all or carrinho.produto_cli is None:
                 carrinho.produto_cli.add(prod)
             carrinho.valor += prod.valor
             carrinho.save()
