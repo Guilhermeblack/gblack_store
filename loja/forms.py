@@ -17,12 +17,12 @@ class cria_usr(forms.ModelForm):
 
     class Meta:
         model = models.Cliente
-        fields = ['cpf', 'email', 'nome', 'senha','senha_rep', 'telefone', 'loja']
+        fields = ['cpf', 'email', 'nome', 'senha','senha_rep', 'telefone']
         # name= 'cria_usr'
     nome = forms.CharField()
     cpf = forms.CharField()
     telefone = forms.CharField()
-    loja = forms.BooleanField()
+    # loja = forms.BooleanField()
     senha = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'senha'}))
     senha_rep = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'repetir senha'}))
     email = forms.CharField()

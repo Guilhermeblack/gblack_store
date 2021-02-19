@@ -177,28 +177,31 @@
         </div>
 
         <ul class="faq-list">
-          {% for key, p in carrinho %}
+          {% if  produtos %}
+
             <li data-aos="fade-up" data-aos-delay="{{key}}00">
               <a data-toggle="collapse" href="#tab_{{key}}" class="collapsed"><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
               <div id="tab_{{key}}" class="collapse" data-parent=".faq-list">
-                {%for pro in p.produto_cli %}
-                  <p>
-                    <b>{{pro.nome}}</b>
-                  </p>
-                    {{pro.preco}}
-                  </p>
-                  <p>
-                    Temos todo o carinho com a embalagem e postagem de seus produtos, para que o cliente fique satisfeito com sua compra
-                  </p>
+                {% for p in produtos %}
+                  {% if produtos.id in carrinho.produto_cli %}
+                    <p>
+                      <b>{{p.nome}}</b>
+                    </p>
+                      {{p.preco}}
+                    </p>
+                    <p>
+                      Temos todo o carinho com a embalagem e postagem de seus produtos, para que o cliente fique satisfeito com sua compra
+                    </p>
+                  {%endif%}
                 {%endfor%}
               </div>
             </li>
-          {% empty %}
+          {% else %}
             <li data-aos="fade-up" data-aos-delay="100">
-              <a data-toggle="collapse" href="  #" class="collapsed"><b>{{'Sem produtos no carrinho até o momento'}}</b></a>
+              <a data-toggle="collapse"  class="collapsed"><b>{{'Sem produtos no carrinho até o momento'}}</b></a>
 
             </li>
-          {% endfor %}
+          {% endif %}
         </ul>
 
       </div>
