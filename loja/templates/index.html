@@ -111,7 +111,6 @@
 
         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
           {% for p in produtos %}
-          {{p.tipo}}
             <div class="col-lg-4 col-md-5 portfolio-item {{p.tipo}}">
               <div class="portfolio-wrap bg-white">
                 <img src="{{p.img_prod.url}}" class="img-fluid" alt="{{p.nome}}">
@@ -129,6 +128,12 @@
 <!--                <i class=""><span class="iconify" data-icon="bi:arrow-left-square-fill" data-inline="false"></span></i><input type="number"></input><i class=""><span class="iconify" data-icon="bi:arrow-right-square-fill" data-inline="false"></span></i>-->
 
 <!--              </div>-->
+            </div>
+          {% empty %}
+            <div class="col-lg d-flex portfolio-item {{p.tipo}}">
+              <div class="portfolio-wrap bg-white">
+                <b>{{'Sem produtos até o momento'}}</b>
+              </div>
             </div>
           {% endfor %}
 <!--          <div class="col-lg-4 col-md-6 portfolio-item filter-web">-->

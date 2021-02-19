@@ -28,6 +28,7 @@ def index(request):
                 password = make_password(rq['senha'], salt=None, hasher='pbkdf2_sha256')
                 usr = forms.cria_usr(rq)
                 usr['senha'].value = password
+                # pprint(usr)
                 # print(usr.errors)
                 if usr.is_valid():
                     cli = usr.save()
@@ -50,7 +51,7 @@ def index(request):
             encod = encod.get(nome=rq['nome_log'])
 
             pprint(encod.senha)
-
+            print(encod.errors)
             if encod is not None:
                 login(request, encod)
                 messages.info(request, ' Bem vindo')
@@ -116,19 +117,28 @@ def conta(request):
                 messages.info(request, 'Produto não cadastrado')
             return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
     # print('foi =-=-')
-    pprint(request.user.id)
+
     clent = models.Cliente.objects.get(pk=request.user.id)
+    cart = models.Carrinho.objects.get(cliente_cli=clent.id)
+    prods = models.Produto.objects.all()
+    pprint(clent)
+    pprint(cart)
+
+    # if len(cart) isArray:
+    #     cart = [cart]
+    pprint(cart.produto_cli)
+    pprint(prods)
     return render(
         request,
         'conta.html',
         {
             'prod': forms.produtoform,
             # 'userform':forms.cria_usr(),
-            'usuario': models.Cliente.objects.get(pk=request.user.id),
-            'carrinho': models.Carrinho.objects.filter(cliente_cli=clent.id),
+            'usuario': clent,
+            'carrinho': cart,
             # 'totalpedido': models.Tot_ped.objects.all(),
             # 'venda': models.Venda.objects.all(),
-            'produtos': models.Produto.objects.all(),
+            'produtos': prods,
             # 'pagamento': models.Pagamentos.objects.all(),
             'prodtipo': models.Produto.STATUS_CHOICES
 
@@ -143,7 +153,7 @@ def prod(request):
             cli = models.Cliente.objects.get(id=request.user.id)
 
             prod = models.Produto.objects.get(pk=request.POST['add_carrinho'])
-            carrinho = models.Carrinho.objects.filter(cliente_cli=cli.id)
+            carrinho = models.Carrinho.objects.get(cliente_cli=cli.id)
             pprint(carrinho)
 
             if prod not in carrinho.produto_cli.all or carrinho.produto_cli is None:
