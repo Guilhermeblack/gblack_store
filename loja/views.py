@@ -154,11 +154,11 @@ def prod(request):
 
             prod = models.Produto.objects.get(pk=request.POST['add_carrinho'])
             carrinho = models.Carrinho.objects.get(cliente_cli=cli.id)
-            pprint(carrinho)
+            pprint(carrinho.produto_cli.all())
 
-            if prod not in carrinho.produto_cli.all or carrinho.produto_cli is None:
+            if prod not in carrinho.produto_cli.all():
                 carrinho.produto_cli.add(prod)
-            carrinho.valor += prod.valor
+            carrinho.valor += prod.preco
             carrinho.save()
             ped = models.Tot_ped.objects.create(
                 carrinho=carrinho,
@@ -167,10 +167,17 @@ def prod(request):
             ped.quantidade +=1
             ped.save()
             print('deu tudo')
-            pass
-    return render(request, 'sobre.html', {
-        'user': request.user,
-    })  # enviar para as comandas
+            messages.info(request, 'Pedido Feito')
+            return render(request,
+                          'index.html',
+                          {
+                              'criar': forms.cria_usr,
+                              'logar': forms.autForm,
+                              # 'prod': forms.produtoform,
+                              'produtos': models.Produto.objects.all().order_by('tipo'),
+                              'prodtipo': models.Produto.STATUS_CHOICES
+                          })
+    return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)  # enviar para as comandas
 
 #
 # @csrf_protect
