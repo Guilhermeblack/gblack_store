@@ -114,8 +114,9 @@
             <ul id="portfolio-flters">
               <li data-filter="*" class="filter-active">Todos</li>
               {% for tp in produtos %}
-                <li data-filter=".{{tp.tipo}}" class="filter-active" id="{{tp.id}}">{{tp.get_tipo_display}}</li>
-<!--                <li data-filter=".filter-web" id="acessorios">Acessórios</li>-->
+                {% ifchanged tp.tipoe %}
+                  <li data-filter=".{{tp.tipo}}" class="filter-active" id="{{tp.id}}">{{tp.get_tipo_display}}</li>
+                {% endifchanged %}
               {% endfor %}
             </ul>
           </div>
@@ -127,7 +128,7 @@
               <div class="portfolio-wrap bg-white">
                 <img src="{{p.img_prod.url}}" class="img-fluid" alt="{{p.nome}}">
                 <div class="portfolio-info">
-                  <h4>{{p.nome}}</h4>
+                  <h4>{{p.nome}} -- {{p.estoque}}</h4>
                   <p>R$ {{p.preco}}</p>
                   <div class="portfolio-links">
                     <a href="{{p.img_prod.url}}" data-gall="portfolioGallery" class="venobox" title="{{p.nome}}"><i class="bx bx-plus"></i></a>

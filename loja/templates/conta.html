@@ -87,20 +87,20 @@
 
         <ul class="faq-list">
           {% for p in produtos %}
-            <li data-aos="fade-up" data-aos-delay="00">
-              <a data-toggle="collapse" class="collapsed" href="#tab_{{p.id}}"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
-              <div id="tab_{{p.id}}" class="collapse" data-parent=".faq-list">
+            <li data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
+              <a data-toggle="collapse" class="collapsed" href="#ta_{{p.id}}"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+              <div id="ta_{{p.id}}" class="collapse" data-parent=".faq-list">
                 <p>
-                    {{p.nome}}
+                    Estoque:  -  {{p.estoque}}
                 </p>
                 <p>
-                    {{p.descricao}}
+                    Descrição:<br>{{p.descricao}}
                 </p>
                 <p>
-                    {{p.preco}}
+                    Preço:<br> R${{p.preco}}
                 </p>
                 <p>
-                    <img src="{{p.img_prod.url}}">
+                    <img class="card-img-top pb-5" style="width: 18rem;" src="{{p.img_prod.url}}" alt="">
                 </p>
               </div>
             </li>
@@ -119,7 +119,7 @@
 
     {% endif %}
       <!-- ======= Pricing Section ======= -->
-    {% if and user.loja == False %}
+    {% if  user.loja == False %}
     <section id="pricing" class="pricing section-bg">
       <div class="container">
 
@@ -162,8 +162,10 @@
       </div>
     </section><!-- End Pricing Section -->
 
-
     {% endif %}
+    {% for pe in pedidos %}
+        {{pe.quantidade}}
+    {% endfor %}
 
         <!-- ======= Frequently Asked Questions Section ======= -->
     <section id="faq" class="faq">
@@ -174,25 +176,38 @@
         </div>
 
         <ul class="faq-list">
-          {% if  produtos %}
+          {% if produtos %}
 
-            <li data-aos="fade-up" data-aos-delay="{{key}}00">
-              <a data-toggle="collapse" href="#tab_{{key}}" class="collapsed"><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
-              <div id="tab_{{key}}" class="collapse" data-parent=".faq-list">
-                {% for p in produtos %}
-                  {% if produtos.id in carrinho.produto_cli %}
-                    <p>
-                      <b>{{p.nome}}</b>
-                    </p>
-                      {{p.preco}}
-                    </p>
-                    <p>
-                      Temos todo o carinho com a embalagem e postagem de seus produtos, para que o cliente fique satisfeito com sua compra
-                    </p>
-                  {%endif%}
-                {%endfor%}
-              </div>
-            </li>
+
+
+<!--            {% for p in produtos %}-->
+              {% for c in carrinho.produto_cli.all %}
+<!--                {% if p.id == c.id %}-->
+                  <li data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
+                    <a data-toggle="collapse" href="#tab_{{ forloop.counter }}" class="collapsed"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+                    <div id="tab_{{ forloop.counter }}" class="collapse" data-parent=".faq-list">
+
+                      <p>
+
+                        <b>{{c.nome}}</b>
+                      </p>
+                        <b>R${{c.preco}}</b> X <b>{{ forloop.revcounter }}</b>
+                      </p>
+                        <img class="card-img-top pb-5" style="width: 18rem;" src="{{c.img_prod.url}}" alt="">
+                      <p>
+                      </p>
+                        <div class="align-self-center pb-6 bg-white">
+                            <div class="btn-wrap">
+                                <a href="  #" class="btn-buy"><button type="button" id="" class="btn-primary btn-rounded">Pagar</button></a>
+                            </div>
+                        </div>
+
+                    </div>
+                  </li>
+<!--                {%endif%}-->
+
+              {%endfor%}
+<!--            {%endfor%}-->
           {% else %}
             <li data-aos="fade-up" data-aos-delay="100">
               <a data-toggle="collapse"  class="collapsed"><b>{{'Sem produtos no carrinho até o momento'}}</b></a>

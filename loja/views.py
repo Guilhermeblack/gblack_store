@@ -50,8 +50,8 @@ def index(request):
             encod = encod.filter(senha=rq['senha'])
             encod = encod.get(nome=rq['nome_log'])
 
-            pprint(encod.senha)
-            print(encod.errors)
+            # pprint(encod.senha)
+            # print(encod.errors)
             if encod is not None:
                 login(request, encod)
                 messages.info(request, ' Bem vindo')
@@ -59,11 +59,15 @@ def index(request):
             else:
                 messages.info(request, 'Usuário inexistente/Bloqueado')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
-
+    carrinho = models.Carrinho.objects.get(cliente_cli= request.user.id)
+    pprint(carrinho.id)
+    pedido = models.Tot_ped.objects.filter(carrinho=carrinho.id)
+    pprint(pedido)
     return render(request,
                   'index.html',
                   {
                     'criar': forms.cria_usr,
+                    'pedidos': pedido,
                     'logar': forms.autForm,
                     # 'prod': forms.produtoform,
                     'produtos':models.Produto.objects.all().order_by('tipo'),
@@ -153,20 +157,38 @@ def prod(request):
             cli = models.Cliente.objects.get(id=request.user.id)
 
             prod = models.Produto.objects.get(pk=request.POST['add_carrinho'])
+            if prod.estoque <=0:
+                messages.warning(request, 'estoque indisponível')
+                return render(request,
+                              'index.html',
+                              {
+                                  'criar': forms.cria_usr,
+                                  'logar': forms.autForm,
+                                  # 'prod': forms.produtoform,
+                                  'produtos': models.Produto.objects.all().order_by('tipo'),
+                                  'prodtipo': models.Produto.STATUS_CHOICES
+                              })
+            prod.estoque -= 1
+            prod.save()
             carrinho = models.Carrinho.objects.get(cliente_cli=cli.id)
             pprint(carrinho.produto_cli.all())
 
             if prod not in carrinho.produto_cli.all():
                 carrinho.produto_cli.add(prod)
+                ped = models.Tot_ped.objects.create(
+                    carrinho=carrinho,
+                    produto_carrinho=prod
+                )
+            else:
+                ped = models.Tot_ped.objects.get(produto_carrinho=prod.id)
             carrinho.valor += prod.preco
             carrinho.save()
-            ped = models.Tot_ped.objects.create(
-                carrinho=carrinho,
-                produto_carrinho=prod
-            )
+
             ped.quantidade +=1
             ped.save()
             print('deu tudo')
+            pedido = models.Tot_ped.objects.get(carrinho= carrinho.id)
+            pprint(pedido)
             messages.info(request, 'Pedido Feito')
             return render(request,
                           'index.html',
@@ -174,6 +196,7 @@ def prod(request):
                               'criar': forms.cria_usr,
                               'logar': forms.autForm,
                               # 'prod': forms.produtoform,
+                              'pedidos': pedido,
                               'produtos': models.Produto.objects.all().order_by('tipo'),
                               'prodtipo': models.Produto.STATUS_CHOICES
                           })
