@@ -5,12 +5,16 @@ from django.contrib import messages
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login
 import validate_docbr as docbr
+import requests
 from django.contrib.auth.hashers import make_password, check_password, BCryptPasswordHasher, pbkdf2
 from django.contrib.auth import logout, login, authenticate, get_user
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.models import Permission
 from pprint import pprint
 import cloudinary
+from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
+from paypalhttp import HttpError
+from paypalcheckoutsdk.orders import OrdersCreateRequest
 from django.views.decorators.csrf import csrf_protect
 
 from django.contrib.sessions.models import Session
@@ -122,16 +126,83 @@ def conta(request):
             return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
     # print('foi =-=-')
 
+    tkn = settings.TKN_PAYPAL
+    url = "https://api.sandbox.paypal.com/v1/oauth2/token"
+    url_order = 'https://api.sandbox.paypal.com/v2/checkout/orders'
+
+    # Creating Access Token for Sandbox
+    client_id = "AeiuNrrRAuS4rFA1VhDtnS_L47TrJ6wakg5by7FOLdJ4JQalehB1Najy7HU6iTeJMKKfj7csQDFhSQuV"
+    client_secret = "EH8iMPsj1CwLkPr4bx_1VseaWmuALLPX5FaOwr6s4GdFEUkV2ZxFYJa0pojule4ODYg44aU4VRfMPxZK"
+    # Creating an environment
+    environment = SandboxEnvironment(client_id=client_id, client_secret=client_secret)
+    client = PayPalHttpClient(environment)
+
+    req = OrdersCreateRequest()
+
+    req.prefer('return=representation')
+
+    req.request_body(
+        {
+            "intent": "CAPTURE",
+            "purchase_units": [
+                {
+                    "amount": {
+                        "currency_code": "BRL",
+                        "value": "100.00"
+                    }
+                }
+            ]
+        }
+    )
+
+    # try:
+    #
+    #     # Call API with your client and get a response for your call
+    #     # response = client.execute(req)
+    #
+    #
+    #     print
+    #     'Order With Complete Payload:'
+    #     print
+    #     'Status Code:', response.status_code
+    #     print
+    #     'Status:', response.result.status
+    #     print
+    #     'Order ID:', response.result.id
+    #     print
+    #     'Intent:', response.result.intent
+    #     print
+    #     'Links:'
+    #     for link in response.result.links:
+    #         print('\t{}: {}\tCall Type: {}'.format(link.rel, link.href, link.method))
+    #         print
+    #         'Total Amount: {} {}'.format(response.result.purchase_units[0].amount.currency_code,
+    #                                      response.result.purchase_units[0].amount.value)
+    #         # If call returns body in response, you can get the deserialized version from the result attribute of the response
+    #         order = response.result
+    #         print
+    #         order
+    # except IOError as ioe:
+    #     print
+    #     ioe
+    #     if isinstance(ioe, HttpError):
+    #         # Something went wrong server-side
+    #         print
+    #         ioe.status_code
+
+
+    pprint(client)
+
     clent = models.Cliente.objects.get(pk=request.user.id)
     cart = models.Carrinho.objects.get(cliente_cli=clent.id)
     prods = models.Produto.objects.all()
-    pprint(clent)
-    pprint(cart)
+    # pprint(clent)
+    # pprint(cart)
 
     # if len(cart) isArray:
     #     cart = [cart]
-    pprint(cart.produto_cli)
-    pprint(prods)
+    # pprint(cart.produto_cli)
+    # pprint(prods)
     return render(
         request,
         'conta.html',
@@ -202,21 +273,63 @@ def prod(request):
                           })
     return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)  # enviar para as comandas
 
-#
-# @csrf_protect
-# def loguin(request):
-#     if request.POST:
-#         # print(' >>>', request.POST)
-#         formu = forms.autForm(request.POST)
-#         # print(' >>>', formu)
-#         if formu.is_valid():
-#             username = formu.cleaned_data.get('nome')
-#             # password = make_password(formu.cleaned_data.get('senha'), salt=None, hasher='pbkdf2_sha256')
-#             # print(password)
-#             user = authenticate(
-#                 username=username,
-#                 password=formu.cleaned_data.get('senha')
-#             )
+
+@csrf_protect
+def pagamento(request):
+
+
+
+    tkn = settings.TKN_PAYPAL
+    url = "https://api.sandbox.paypal.com/v1/oauth2/token"
+
+    payload = "grant_type=client_credentials"
+    headers = {
+        'accept': "application/json",
+        'accept-language': "pt_BR",
+        'content-type': "application/x-www-form-urlencoded",
+        'authorization': tkn
+    }
+
+    response = requests.request("POST", url, data=payload, headers=headers)
+    pprint(response.content)
+    # nonce = response.nonce
+    # acesstkn = response.access_token
+    # tkn_type =response.token_type
+    # id_app = response.app_id
+    # expire = response.expires_in
+
+    print(response.status_code)
+
+    print(response.text)
+    if request.POST:
+        print(' >>>', request.POST)
+        pass
+    clent = models.Cliente.objects.get(pk=request.user.id)
+    cart = models.Carrinho.objects.get(cliente_cli=clent.id)
+    prods = models.Produto.objects.all()
+    pprint(clent)
+    pprint(cart)
+
+    # if len(cart) isArray:
+    #     cart = [cart]
+    pprint(cart.produto_cli)
+    pprint(prods)
+    return render(
+        request,
+        'conta.html',
+        {
+            'prod': forms.produtoform,
+            # 'userform':forms.cria_usr(),
+            'usuario': clent,
+            'carrinho': cart,
+            # 'totalpedido': models.Tot_ped.objects.all(),
+            # 'venda': models.Venda.objects.all(),
+            'produtos': prods,
+            # 'pagamento': models.Pagamentos.objects.all(),
+            'prodtipo': models.Produto.STATUS_CHOICES
+
+        }
+    )
 #
 #             if user is not None:
 #                 login(request, user)

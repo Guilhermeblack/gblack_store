@@ -17,6 +17,8 @@
     {% if prod and user.loja %}
 
 
+
+
     <section id="contact" class="contact section-bg">
       <div class="container">
 
@@ -169,7 +171,7 @@
 
         <!-- ======= Frequently Asked Questions Section ======= -->
     <section id="faq" class="faq">
-      <div class="container">
+      <div class="container justify-content-center">
 
         <div class="section-title" data-aos="fade-up">
           <h2>Meu Carrinho</h2>
@@ -185,29 +187,148 @@
 <!--                {% if p.id == c.id %}-->
                   <li data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
                     <a data-toggle="collapse" href="#tab_{{ forloop.counter }}" class="collapsed"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
-                    <div id="tab_{{ forloop.counter }}" class="collapse" data-parent=".faq-list">
+                    <div id="tab_{{ forloop.counter }}" class="collapse pdt" data-parent=".faq-list">
 
                       <p>
 
-                        <b>{{c.nome}}</b>
+                        <b id="nome_prod">{{c.nome}}</b>
                       </p>
-                        <b>R${{c.preco}}</b> X <b>{{ forloop.revcounter }}</b>
+                        <b id="preco_prod">R${{c.preco}}</b> X <b id="quantidade_total">{{ forloop.revcounter }}</b>
                       </p>
                         <img class="card-img-top pb-5" style="width: 18rem;" src="{{c.img_prod.url}}" alt="">
                       <p>
-                      </p>
-                        <div class="align-self-center pb-6 bg-white">
-                            <div class="btn-wrap">
-                                <a href="  #" class="btn-buy"><button type="button" id="" class="btn-primary btn-rounded">Pagar</button></a>
-                            </div>
+
+                        <div>
+
+
                         </div>
+                      </p>
+
+
+
+
+
+
 
                     </div>
+
                   </li>
 <!--                {%endif%}-->
 
               {%endfor%}
 <!--            {%endfor%}-->
+                <div id="smart-button-container">
+      <div style="text-align: center;">
+        <div style="margin-bottom: 1.25rem;">
+          <p>Compra GBlackStore</p>
+          <select id="item-options"><option value="1X" price="50">1X - 50 BRL</option><option value="2X" price="25">2X - 25 BRL</option><option value="3X" price="16.70">3X - 16.70 BRL</option></select>
+<!--          <select style="visibility: hidden" id="quantitySelect"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>-->
+        </div>
+      <div id="paypal-button-container"></div>
+      </div>
+    </div>
+    <script src="https://www.paypal.com/sdk/js?client-id=AeiuNrrRAuS4rFA1VhDtnS_L47TrJ6wakg5by7FOLdJ4JQalehB1Najy7HU6iTeJMKKfj7csQDFhSQuV&currency=BRL" data-sdk-integration-source="button-factory"></script>
+    <script>
+      function initPayPalButton() {
+        var shipping = 15;
+        var itemOptions = document.querySelector("#smart-button-container #item-options");
+        console.log(itemOptions);
+        var quantity = parseInt(3);
+        var aux = document.querySelector("#smart-button-container #item-options ");
+        console.log(aux);
+        var quantitySelect = aux;
+        if (!isNaN(quantity)) {
+          quantitySelect.style.visibility = "visible";
+        }
+        var orderDescription = 'Compra GBlackStore';
+        if(orderDescription === '') {
+          orderDescription = 'Item';
+        }
+        paypal.Buttons({
+          style: {
+            shape: 'pill',
+            color: 'silver',
+            layout: 'vertical',
+            label: 'paypal',
+
+          },
+          createOrder: function(data, actions) {
+            var selectedItemDescription = itemOptions.options[itemOptions.selectedIndex].value;
+            var selectedItemPrice = parseFloat(itemOptions.options[itemOptions.selectedIndex].getAttribute("price"));
+            console.log('priceee',selectedItemPrice);
+            var tax = (7 === 0) ? 0 : (selectedItemPrice * (parseFloat(7)/100));
+            if(quantitySelect.options.length > 0) {
+              quantity = parseInt(quantitySelect.options[quantitySelect.selectedIndex].value);
+            } else {
+              quantity = 1;
+            }
+
+            tax *= quantity;
+            tax = Math.round(tax * 100) / 100;
+            var priceTotal = quantity * selectedItemPrice + parseFloat(shipping) + tax;
+            priceTotal = Math.round(priceTotal * 100) / 100;
+            var itemTotalValue = Math.round((selectedItemPrice * quantity) * 100) / 100;
+
+<!--            ('.pdt')each(function() {-->
+<!--                itens.append(-->
+<!--                    name: $(this).find('#nome_prod').text(),-->
+<!--                      unit_amount: {-->
+<!--                        currency_code: 'BRL',-->
+<!--                        value: $(this).find('#preco_prod').text(),-->
+<!--                      },-->
+<!--                    quantity: $(this).find('#quantidade_total').text()-->
+<!--                );-->
+<!--                ptot += parseInt($(this).find('#quantidade_total').text()) * parseFloat($(this).find('#preco_prod').text());-->
+<!--            });-->
+
+
+            return actions.order.create({
+              purchase_units: [{
+                description: orderDescription,
+                amount: {
+                  currency_code: 'BRL',
+                  value: priceTotal,
+                  breakdown: {
+                    item_total: {
+                      currency_code: 'BRL',
+                      value: itemTotalValue,
+                    },
+                    shipping: {
+                      currency_code: 'BRL',
+                      value: shipping,
+                    },
+                    tax_total: {
+                      currency_code: 'BRL',
+                      value: 7,
+                    }
+                  }
+                },
+
+                items: [{
+
+                    name: selectedItemDescription,
+                      unit_amount: {
+                        currency_code: 'BRL',
+                        value: selectedItemPrice,
+                      },
+                    quantity: quantity
+
+                }]
+              }]
+            });
+          },
+          onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+              alert('Transaction completed by ' + details.payer.name.given_name + '!');
+            });
+          },
+          onError: function(err) {
+            console.log(err);
+          },
+        }).render('#paypal-button-container');
+      }
+      initPayPalButton();
+        </script>
           {% else %}
             <li data-aos="fade-up" data-aos-delay="100">
               <a data-toggle="collapse"  class="collapsed"><b>{{'Sem produtos no carrinho até o momento'}}</b></a>
@@ -217,5 +338,10 @@
         </ul>
 
       </div>
-    </section><!-- End Frequently Asked Questions Section -->
+
+
+
+    </section>
+
 {% endblock %}
+
