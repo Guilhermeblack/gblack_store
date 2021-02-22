@@ -51,22 +51,27 @@ def index(request):
         elif 'nome_log' in rq:
             encod = models.Cliente.objects.all()
             pprint(encod)
-            encod = encod.filter(senha=rq['senha'])
-            encod = encod.get(nome=rq['nome_log'])
+            if encod:
+                encod = encod.filter(senha=rq['senha'])
+            if encod:
+                encod = encod.get(nome=rq['nome_log'])
 
-            # pprint(encod.senha)
+            pprint(encod)
             # print(encod.errors)
-            if encod is not None:
+            if encod is not None and encod.count() != 0:
                 login(request, encod)
                 messages.info(request, ' Bem vindo')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
             else:
                 messages.info(request, 'Usuário inexistente/Bloqueado')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
-    carrinho = models.Carrinho.objects.get(cliente_cli= request.user.id)
-    pprint(carrinho.id)
-    pedido = models.Tot_ped.objects.filter(carrinho=carrinho.id)
-    pprint(pedido)
+    if request.user.is_authenticated:
+        carrinho = models.Carrinho.objects.get(cliente_cli= request.user.id)
+        pprint(carrinho.id)
+        pedido = models.Tot_ped.objects.filter(carrinho=carrinho.id)
+        pprint(pedido)
+    else:
+        pedido =[]
     return render(request,
                   'index.html',
                   {
