@@ -14,7 +14,6 @@ from pathlib import Path
 import cloudinary  # cloudinary
 import cloudinary.uploader  # cloudinary
 import cloudinary.api  # cloudinary
-import django_heroku
 import psycopg2.extensions
 import os
 
@@ -23,6 +22,7 @@ import django
 from django.conf.global_settings import DATABASES
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'loja',
     'cloudinary',
     'django_pagarme',
+    'paypal.standard.pdt',
     # 'django-heroku'
 ]
 LOGOUT_REDIRECT_URL = '/'
@@ -225,8 +226,11 @@ cloudinary.config(
 )
 
 # Dados para integração com Pagarme
-CHAVE_PAGARME_API_PRIVADA = 'ak_live_8jUYbLG5ojzgs9wisry243ycehrk1g'
-CHAVE_PAGARME_CRIPTOGRAFIA_PUBLICA = 'ek_live_kwLtZhdUxIWxbGGC4cHq7cddKh5T21'
+# CHAVE_PAGARME_API_PRIVADA = 'ak_live_8jUYbLG5ojzgs9wisry243ycehrk1g'
+# CHAVE_PAGARME_CRIPTOGRAFIA_PUBLICA = 'ek_live_kwLtZhdUxIWxbGGC4cHq7cddKh5T21'
+#
+# # Para validar telefones no Brasil
+# PHONENUMBER_DEFAULT_REGION = 'BR'
 
-# Para validar telefones no Brasil
-PHONENUMBER_DEFAULT_REGION = 'BR'
+PAYPAL_IDENTITY_TOKEN= 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
+TKN_PAYPAL= 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
