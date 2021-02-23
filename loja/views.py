@@ -31,7 +31,7 @@ def index(request):
                 # print('validooou')
                 password = make_password(rq['senha'], salt=None, hasher='pbkdf2_sha256')
                 usr = forms.cria_usr(rq)
-                usr['senha'].value = password
+                # usr['senha'].value = password
                 # pprint(usr)
                 # print(usr.errors)
                 if usr.is_valid():
@@ -49,16 +49,15 @@ def index(request):
                 messages.warning(request, 'CPF/CNPJ inválidos')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
         elif 'nome_log' in rq:
-            encod = models.Cliente.objects.all()
+            encod = models.Cliente.objects.filter(nome=rq['nome_log'])
             pprint(encod)
+            print(rq['senha'])
             if encod:
-                encod = encod.filter(senha=rq['senha'])
-            if encod:
-                encod = encod.get(nome=rq['nome_log'])
+                encod = encod.get(senha=rq['senha'])
 
             pprint(encod)
             # print(encod.errors)
-            if encod is not None and encod.count() != 0:
+            if encod is not None:
                 login(request, encod)
                 messages.info(request, ' Bem vindo')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)

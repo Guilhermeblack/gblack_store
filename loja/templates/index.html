@@ -21,9 +21,10 @@
             headers: { "X-CSRFToken": '{{csrf_token}}' },
             type: 'POST',
             url: "{% url 'prod' %}",
+            dataType: "json",
             data: {'add_carrinho' :prod},
             success: function (response) {
-
+              $(this).find('.qntpdt').text() = 'banana';
             },
             error: function (response) {
             }
@@ -128,7 +129,7 @@
               <div class="portfolio-wrap bg-white">
                 <img src="{{p.img_prod.url}}" class="img-fluid" alt="{{p.nome}}">
                 <div class="portfolio-info">
-                  <h4>{{p.nome}} -- {{p.estoque}}</h4>
+                  <h4>{{p.nome}} -- <b class="qntpdt"> {{p.estoque}}</b></h4>
                   <p>R$ {{p.preco}}</p>
                   <div class="portfolio-links">
                     <a href="{{p.img_prod.url}}" data-gall="portfolioGallery" class="venobox" title="{{p.nome}}"><i class="bx bx-plus"></i></a>
