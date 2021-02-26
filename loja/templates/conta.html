@@ -105,34 +105,31 @@
           {% for p in produtos %}
             <li data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
               <a data-toggle="collapse" class="collapsed" href="#ta_{{p.id}}"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
-              <div id="ta_{{p.id}}" class="collapse" data-parent=".faq-list">
-                <p>
-                    <label>Estoque:  -</label> <label type="number" contenteditable="true" class="editable" name="pdt_est" value='{{p.estoque}}'>{{p.estoque}}</label>
-                </p>
-                <p>
-                    <label>Nome: </label> <input type="text" name="pdt_nome" value="{{p.nome}}"><br>
-                    <label>Descrição: </label> <input type="text" name="pdt_des" value="{{p.descricao}}">
-                    <br>
-                </p>
-                <p>
-                    <label>Preço: </label> <label type="number" contenteditable="true" class="editable" name="pdt_pre" value='{{p.preco}}'>{{p.preco}}</label>
+              <div id="ta_{{p.id}}" class="collapse " data-parent=".faq-list">
+                <div class="row ">
+                    <label type="text"  name="pdt_nome" class="editable input-group-text mx-3" contenteditable="true" value="{{p.nome}}">Nome: <b>{{p.nome}}</b></label>
+                    <label type="number" contenteditable="true" class="editable input-group-text mx-3" name="pdt_est" value='{{p.estoque}}'>Estoque:  - <b>{{p.estoque}}</b></label>
 
-                </p>
-                <p>
-                    <label>Tipo</label>
-                    <select>
+                    <label type="text"  name="pdt_des" class="editable input-group-text mx-3" contenteditable="true" value="{{p.descricao}}">Descrição:  <b>{{p.descricao}}</b></label>
 
-                    {% for pt in prodtipo %}
+                  <label type="number" contenteditable="true" class="editable input-group-text mx-3" class="editable " name="pdt_pre" value='{{p.preco}}'>Preço:  <b>{{p.preco}}</b></label>
 
-                        {% if p.tipo == pt %}
-                            <option value="{{pt.0}}" class="selected" >{{pt.1}}</option>
-                        {% else %}
-                            <option value="{{pt.0}}">{{pt.1}}</option>
-                        {% endif %}
-                    {% endfor %}
-                    </select>
+                    <div class="input-group-prepend ">
+                        <label class="editable input-group-text" >Tipo</label>
 
-                </p>
+                        <select class=" custom-select justify-content-end" style="width: auto">
+
+                        {% for pt in prodtipo %}
+
+                            {% if p.tipo == pt %}
+                            <option value="{{pt.0}}" class="selected" ><b>{{pt.1}}</b>b</option>
+                            {% else %}
+                            <option value="{{pt.0}}" ><b>{{pt.1}}</b></option>
+                            {% endif %}
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
                 <p>
                     <img class="card-img-top pb-5" style="width: 18rem;" src="{{p.img_prod.url}}" alt="">
                 </p>
@@ -227,7 +224,7 @@
                       </p>
                         <b id="preco_prod">R${{c.preco}}</b> X <b id="quantidade_total">{{ forloop.revcounter }}</b>
                       </p>
-                        <img class="card-img-top pb-5" style="width: 18rem;" src="{{c.img_prod.url}}" alt="">
+                        <img class="card-img-top pb-5" style="width: 18rem;" src="{{c.img_prod.url}}" alt="{{c.nome}}">
                       <p>
 
                         <div>
