@@ -7,18 +7,136 @@
 {% load cloudinary %}
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            // messages timeout for 10 sec
-            setTimeout(function() {
-                $('.message').fadeOut('slow');
-            }, 10000); // <-- time in milliseconds, 1000 =  1 sec
 
-            // delete message
-            $('.del-msg').live('click',function(){
-                $('.del-msg').parent().attr('style', 'display:none;');
-            })
+        $(document).on('blur','#pdt_nome', function(){
+            var prod = $(this).text().split(':')[1];
+
+            var proid = $(this).siblings('#pdt_id').val();
+            console.log('dalipdt >', proid);
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'prod' %}",
+                dataType: "json",
+                data: {
+                    'pdt_nome' :prod,
+                    'proid':proid
+                },
+                success: function (response) {
+                },
+                error: function (response) {
+                }
+            });
+
         });
+
+        $(document).on('blur','#pdt_est', function(){
+            var prod = $(this).text().split(':')[1];
+            var proid = $(this).siblings('#pdt_id').val();
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'prod' %}",
+                dataType: "json",
+                data: {
+                    'pdt_est' :prod,
+                    'proid':proid
+                },
+                success: function (response) {
+                },
+                error: function (response) {
+                }
+            });
+
+        });
+
+        $(document).on('blur','#pdt_des', function(){
+            var prod = $(this).text().split(':')[1];
+            console.log('dalipdt >', prod);
+            var proid = $(this).siblings('#pdt_id').val();
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'prod' %}",
+                dataType: "json",
+                data: {
+                'proid':proid,
+                'pdt_des' :prod
+                },
+                success: function (response) {
+                },
+                error: function (response) {
+                }
+            });
+
+        });
+
+        $(document).on('blur','#pdt_pre', function(){
+            var prod = $(this).text().split(':')[1];
+            console.log('dalipdt >', prod);
+            var proid = $(this).siblings('#pdt_id').val();
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'prod' %}",
+                dataType: "json",
+                data: {
+                    'proid':proid,
+                    'pdt_pre' :prod
+                },
+                success: function (response) {
+                },
+                error: function (response) {
+                }
+            });
+
+
+        });
+
+        $(document).on('blur','#pdt_tipo', function(){
+            var prod = $(this).val();
+            console.log('éoprod', prod);
+            var proid = $(this).parent().siblings('#pdt_id').val();
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'prod' %}",
+                dataType: "json",
+                data: {
+                    'pdt_tipo' :prod,
+                    'proid':proid
+                },
+                success: function (response) {
+                },
+                error: function (response) {
+                }
+            });
+
+        });
+
+        $(document).on('click','#btn_del',function(){
+            var prod = $(this).val();
+            var proid = $('#pdt_id').siblings('#pdt_id').val();
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                type: 'POST',
+                url: "{% url 'prod' %}",
+                dataType: "json",
+                data: {
+                    'btn_del' :prod,
+                    'proid':proid
+                },
+                success: function (response) {
+                },
+                error: function (response) {
+                }
+            });
+
+        });
+
+
     </script>
+
     {% for message in messages %}
         <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
             <button style="font-size: 22px;  align-self: right" type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -107,28 +225,30 @@
               <a data-toggle="collapse" class="collapsed" href="#ta_{{p.id}}"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
               <div id="ta_{{p.id}}" class="collapse " data-parent=".faq-list">
                 <div class="row ">
-                    <label type="text"  name="pdt_nome" class="editable input-group-text mx-3" contenteditable="true" value="{{p.nome}}">Nome: <b>{{p.nome}}</b></label>
-                    <label type="number" contenteditable="true" class="editable input-group-text mx-3" name="pdt_est" value='{{p.estoque}}'>Estoque:  - <b>{{p.estoque}}</b></label>
+                    <input type="hidden" value="{{p.id}}" name="pdt_id" id="pdt_id">
+                    <label type="text"  name="pdt_nome" id="pdt_nome" class="editable input-group-text mx-3" contenteditable="true" value="{{p.nome}}">Nome: <b>{{p.nome}}</b></label>
+                    <label type="number" contenteditable="true" class="editable input-group-text mx-3" name="pdt_est" id="pdt_est" value='{{p.estoque}}'>Estoque:   <b>{{p.estoque}}</b></label>
 
-                    <label type="text"  name="pdt_des" class="editable input-group-text mx-3" contenteditable="true" value="{{p.descricao}}">Descrição:  <b>{{p.descricao}}</b></label>
+                    <label type="text"  name="pdt_des" id="pdt_des" class="editable input-group-text mx-3" contenteditable="true" value="{{p.descricao}}">Descrição:  <b>{{p.descricao}}</b></label>
 
-                  <label type="number" contenteditable="true" class="editable input-group-text mx-3" class="editable " name="pdt_pre" value='{{p.preco}}'>Preço:  <b>{{p.preco}}</b></label>
+                  <label type="number" contenteditable="true" class="editable input-group-text mx-3" class="editable " name="pdt_pre" id="pdt_pre" value='{{p.preco}}'>Preço:  <b>{{p.preco}}</b></label>
 
                     <div class="input-group-prepend ">
                         <label class="editable input-group-text" >Tipo</label>
 
-                        <select class=" custom-select justify-content-end" style="width: auto">
+                        <select name="pdt_tipo" id="pdt_tipo" class=" custom-select justify-content-end" style="width: auto">
 
                         {% for pt in prodtipo %}
-
-                            {% if p.tipo == pt %}
-                            <option value="{{pt.0}}" class="selected" ><b>{{pt.1}}</b>b</option>
+<!--                            {{p.tipo}}-->
+                            {% if p.tipo == pt.0 %}
+                            <option value="{{pt.0}}" selected ><b>{{pt.1}}</b></option>
                             {% else %}
                             <option value="{{pt.0}}" ><b>{{pt.1}}</b></option>
                             {% endif %}
                         {% endfor %}
                         </select>
                     </div>
+                    <button type="button"  name="btn_del" id="btn_del" class="btn text-alert input-group-text mx-3" value="{{p.descricao}}"><b>{{'Deletar'}}</b></button>
                 </div>
                 <p>
                     <img class="card-img-top pb-5" style="width: 18rem;" src="{{p.img_prod.url}}" alt="">

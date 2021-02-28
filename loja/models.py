@@ -46,6 +46,7 @@ class Cliente( AbstractUser, PermissionsMixin):
         max_length=35,
         null=True,
         blank=False,
+        unique=True
 
     )
     cpf = models.CharField(
@@ -56,7 +57,7 @@ class Cliente( AbstractUser, PermissionsMixin):
 
     )
     data = models.DateTimeField(auto_now_add=True, blank=True)
-    USERNAME_FIELD = 'nome'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['senha', 'cpf']
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
