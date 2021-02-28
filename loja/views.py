@@ -1,4 +1,7 @@
 from datetime import date
+
+from django.http import HttpResponse
+
 from loja import forms,models
 from gbstr import settings
 from django.contrib import messages
@@ -228,21 +231,17 @@ def prod(request):
 
     if request.POST:
         pprint(request.POST)
-        if 'add_carrinho' in request.POST:
+        rq =request.POST
+        if 'proid' in rq:
+            pdt = models.Produto.objects.get(pk=rq['proid'])
+        if 'add_carrinho' in rq:
             cli = models.Cliente.objects.get(id=request.user.id)
 
             prod = models.Produto.objects.get(pk=request.POST['add_carrinho'])
             if prod.estoque <=0:
                 messages.warning(request, 'estoque indisponível')
-                return render(request,
-                              'index.html',
-                              {
-                                  'criar': forms.cria_usr,
-                                  'logar': forms.autForm,
-                                  # 'prod': forms.produtoform,
-                                  'produtos': models.Produto.objects.all().order_by('tipo'),
-                                  'prodtipo': models.Produto.STATUS_CHOICES
-                              })
+                return HttpResponse(prod.estoque)
+
             prod.estoque -= 1
             prod.save()
             carrinho = models.Carrinho.objects.get(cliente_cli=cli.id)
@@ -261,20 +260,56 @@ def prod(request):
 
             ped.quantidade +=1
             ped.save()
-            print('deu tudo')
-            pedido = models.Tot_ped.objects.get(carrinho= carrinho.id)
-            pprint(pedido)
+
+            pedido = models.Tot_ped.objects.filter(carrinho= carrinho.id)
             messages.info(request, 'Pedido Feito')
-            return render(request,
-                          'index.html',
-                          {
-                              'criar': forms.cria_usr,
-                              'logar': forms.autForm,
-                              # 'prod': forms.produtoform,
-                              'pedidos': pedido,
-                              'produtos': models.Produto.objects.all().order_by('tipo'),
-                              'prodtipo': models.Produto.STATUS_CHOICES
-                          })
+            print('deu tudo')
+            return HttpResponse(prod.estoque)
+
+        elif 'pdt_nome' in rq and rq['pdt_nome'] != '':
+            pdt.nome = rq['pdt_nome']
+            pdt.save()
+        elif 'pdt_est' in rq and rq['pdt_est'] != '':
+            pprint(rq['pdt_est'])
+            pdt.estoque = int(rq['pdt_est'])
+            pdt.save()
+        elif 'pdt_des' in rq and rq['pdt_des'] != '':
+            pprint(rq['pdt_des'])
+            pdt.descricao = rq['pdt_des']
+            pdt.save()
+        elif 'pdt_tipo' in rq and rq['pdt_tipo'] != '':
+            pprint(pdt.tipo)
+            obj = models.Produto.objects.filter(pk=rq['proid'])
+            opc = models.Produto.STATUS_CHOICES
+            for p in opc:
+                if p[0] == rq['pdt_tipo']:
+                    obj.update(tipo=p[0])
+
+        elif 'pdt_pre' in rq and rq['pdt_pre'] != '':
+            pdt.preco = rq['pdt_pre']
+            pdt.save()
+        elif 'btn_del' in rq and rq['btn_del'] != '':
+            pdt.delete()
+            pdt.save()
+        clent = models.Cliente.objects.get(pk=request.user.id)
+        cart = models.Carrinho.objects.get(cliente_cli=clent.id)
+        prods = models.Produto.objects.all()
+        return render(
+            request,
+            'conta.html',
+            {
+                'prod': forms.produtoform,
+                # 'userform':forms.cria_usr(),
+                'usuario': clent,
+                'carrinho': cart,
+                # 'totalpedido': models.Tot_ped.objects.all(),
+                # 'venda': models.Venda.objects.all(),
+                'produtos': prods,
+                # 'pagamento': models.Pagamentos.objects.all(),
+                'prodtipo': models.Produto.STATUS_CHOICES
+
+            }
+        )
     return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)  # enviar para as comandas
 
 
