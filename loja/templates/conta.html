@@ -133,7 +133,11 @@
             });
 
         });
-
+        $(document).on('click','data-toggle',function(e) {
+            if( $(e.target).is('a') ) {
+                $(this).collapse('hide');
+            }
+        });
 
     </script>
 
@@ -222,8 +226,8 @@
         <ul class="faq-list">
           {% for p in produtos %}
             <li data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
-              <a data-toggle="collapse" class="collapsed" href="#ta_{{p.id}}"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
-              <div id="ta_{{p.id}}" class="collapse " data-parent=".faq-list">
+              <a data-toggle="ta_{{p.id}}" class="collapse" href="#" ><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+              <div id="ta_{{p.id}}" class="collapse  " data-parent=".faq-list">
                 <div class="row ">
                     <input type="hidden" value="{{p.id}}" name="pdt_id" id="pdt_id">
                     <label type="text"  name="pdt_nome" id="pdt_nome" class="editable input-group-text mx-3" contenteditable="true" value="{{p.nome}}">Nome: <b>{{p.nome}}</b></label>
@@ -335,7 +339,7 @@
               {% for c in carrinho.produto_cli.all %}
 <!--                {% if p.id == c.id %}-->
                   <li data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
-                    <a data-toggle="collapse" href="#tab_{{ forloop.counter }}" class="collapsed"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+                    <a data-toggle="collapse" href="#tab_{{ forloop.counter }}"  class="collapsed"><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
                     <div id="tab_{{ forloop.counter }}" class="collapse pdt" data-parent=".faq-list">
 
                       <p>
@@ -365,9 +369,13 @@
 <!--                {%endif%}-->
 
               {%endfor%}
+
 <!--            {%endfor%}-->
 
         <div id="smart-button-container">
+            <div class="section-title" data-aos="fade-up">
+                <h3><b><u>Valor do Carrinho: R$ {{carrinho.valor}}</u></b></h3>
+            </div>
           <div style="text-align: center;">
             <div id="paypal-button-container"></div>
           </div>
