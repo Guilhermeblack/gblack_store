@@ -114,7 +114,11 @@
               {% for tp in produtos %}
                 {% ifchanged tp.tipoe %}
                   <li data-filter=".{{tp.tipo}}" class="filter-active" id="{{tp.id}}">{{tp.get_tipo_display}}</li>
+
+                {% else %}
+                  <li data-filter=".{{tp.tipo}}" class="filter-active" id="{{tp.id}}">{{tp.get_tipo_display}}</li>
                 {% endifchanged %}
+
               {% endfor %}
             </ul>
           </div>
@@ -128,11 +132,13 @@
                 <div class="portfolio-info">
                   <h4>{{p.nome}} -- <b class="qntpdt"> {{p.estoque}}</b></h4>
                   <p>R$ {{p.preco}}</p>
+                  {% if user.is_authenticated %}
                   <div class="portfolio-links">
                     <a href="{{p.img_prod.url}}" data-gall="portfolioGallery" class="venobox" title="{{p.nome}}"><i class="bx bx-plus"></i></a>
                     {% csrf_token %}
                     <a  class="addprod" name="{{p.id}}" href="#produto" id="{{p.id}}" > <span class="iconify" data-icon="carbon-shopping-cart-arrow-down" data-inline="false"></span></a>
                   </div>
+                  {% endif %}
                 </div>
               </div>
 <!--              <div class="align-self-center pb-6 bg-primary">-->
