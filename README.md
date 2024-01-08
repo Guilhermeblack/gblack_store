@@ -5,8 +5,8 @@
   <p>
 Projeto de criação de uma plataforma de vendas.
 > Ferramentas:<br>
-> Python 3.10<br>
-> Django 4.1<br>
+> Python 3.11<br>
+> Django 5.0<br>
 > PyCharm 2023.3<br>
 
 <br>
@@ -30,7 +30,7 @@ area de clientes, vendedores, e produtos personalizados de acordo com usuario<br
  Verificamos a versão do python instalada.<br>
   No terminal digitamos o comando:<br>
   > 'Python --version'<br>
-  (necessário python versão 2.7+/3.10+)<p>
+  (necessário python versão 2.7+/3.11+)<p>
  Caso não tenha o pyton instalado, baixe pelo site e instale:<br>
   > https://www.python.org/downloads/<br>
  <p>
@@ -39,8 +39,8 @@ area de clientes, vendedores, e produtos personalizados de acordo com usuario<br
  Agora verificamos a versão di pip instalada.<br>
    No terminal digitamos:<br>
    > pip '--version'<br>
-   (necessário pip 20.1+)<p>
- Caso esteja desatualizado (A versão atual é 23.1.2)<br>
+   (necessário pip 23.1+)<p>
+ Caso esteja desatualizado (A versão atual é 23.3.2)<br>
  Atualize com o comando:<br>
    > 'python -m pip install --upgrade pip'<br>
   <p>
@@ -67,7 +67,7 @@ area de clientes, vendedores, e produtos personalizados de acordo com usuario<br
     > 'python -m pip install django'<p>
  Para atualizar para uma versão mais recente, use o comando:<br>
     > 'python -m pip install -U Django'<br>
-    (versão atual 4.1)<p>
+    (versão atual 5.0)<p>
 
 -=-=-=-=-=-=--=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-<br>
 <p>
