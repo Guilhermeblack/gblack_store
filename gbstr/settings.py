@@ -17,13 +17,12 @@ import cloudinary.api  # cloudinary
 import psycopg2.extensions
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
 import django
+import static
 from django.conf.global_settings import DATABASES
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -31,11 +30,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'jz91+(t=#6sdlnsykv)b*f#op@-qv1j22=x-xg)hc$q7_8kurc'
 
+#
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-#
-ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -101,32 +100,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gbstr.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-client_encoding= 'UTF8'
-timezone='America/Sao_Paulo'
-default_transaction_isolation= 'read committed'
-
+client_encoding = 'UTF8'
+timezone = 'America/Sao_Paulo'
+default_transaction_isolation = 'read committed'
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'postgres',
+    #     'USER': 'postgres',
+    #     # 'PASSWORD': '',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432'
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        # 'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': "db.sqlite3",
     }
 }
 
-import dj_database_url
-DATABASES['default'] = dj_database_url.config(default='postgres://bqutzjqhbzyeun:2a696be3f207322ebfba850995ca6ffd4f658b34664d2240a149803a9b9a4468@ec2-52-4-171-132.compute-1.amazonaws.com:5432/d185ti2fvcrrac')
+# import dj_database_url
+# DATABASES['default'] = dj_database_url.config(default='postgres://bqutzjqhbzyeun:2a696be3f207322ebfba850995ca6ffd4f658b34664d2240a149803a9b9a4468@ec2-52-4-171-132.compute-1.amazonaws.com:5432/d185ti2fvcrrac')
 # DATABASES['default'] = dj_database_url.config()
 
 AUTH_USER_MODEL = "loja.Cliente"
 
-
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -160,33 +161,18 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO','https')
-
-
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-
-STATICFILES_DIRS = ( os.path.join(BASE_DIR, '/static/'), )
-MEDIA_ROOT = os.path.join(BASE_DIR, 'loja/static/')
-
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, 'loja/static'), )
+MEDIA_ROOT = os.path.join(BASE_DIR, '../gblack_store/loja/static/')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, '../staticfiles')
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, '../gblack_store/loja/')
 
-
-
-
-
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'loja/static/'),
-)
 
 PWA_APP_NAME = 'GBlack'
 PWA_APP_DESCRIPTION = "seu produto esta aqui"
@@ -218,7 +204,6 @@ PWA_APP_SPLASH_SCREEN = [
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'pt-BR'
 
-
 cloudinary.config(
     cloud_name="gblack",
     api_key="191418815964556",
@@ -232,5 +217,5 @@ cloudinary.config(
 # # Para validar telefones no Brasil
 # PHONENUMBER_DEFAULT_REGION = 'BR'
 
-PAYPAL_IDENTITY_TOKEN= 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
-TKN_PAYPAL= 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
+PAYPAL_IDENTITY_TOKEN = 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
+TKN_PAYPAL = 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'

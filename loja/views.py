@@ -15,15 +15,16 @@ from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.models import Permission
 from pprint import pprint
 import cloudinary
-from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
-from paypalhttp import HttpError
-from paypalcheckoutsdk.orders import OrdersCreateRequest
+# from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
+# from paypalhttp import HttpError
+# from paypalcheckoutsdk.orders import OrdersCreateRequest
 from django.views.decorators.csrf import csrf_protect
 
 from django.contrib.sessions.models import Session
 # Session.objects.all().delete()
 
 def index(request):
+
     if request.POST:
         rq = request.POST
     # print(' >>>', request.POST)
@@ -74,6 +75,12 @@ def index(request):
         pprint(pedido)
     else:
         pedido =[]
+
+    if models.Produto.objects.all() is None:
+        pdt = []
+    else:
+        pdt =models.Produto.objects.all().order_by('tipo')
+
     return render(request,
                   'index.html',
                   {
@@ -81,7 +88,7 @@ def index(request):
                     'pedidos': pedido,
                     'logar': forms.autForm,
                     # 'prod': forms.produtoform,
-                    'produtos':models.Produto.objects.all().order_by('tipo'),
+                    'produtos': pdt,
                     'prodtipo': models.Produto.STATUS_CHOICES
                   })
 #
@@ -141,26 +148,26 @@ def conta(request):
     client_id = "AeiuNrrRAuS4rFA1VhDtnS_L47TrJ6wakg5by7FOLdJ4JQalehB1Najy7HU6iTeJMKKfj7csQDFhSQuV"
     client_secret = "EH8iMPsj1CwLkPr4bx_1VseaWmuALLPX5FaOwr6s4GdFEUkV2ZxFYJa0pojule4ODYg44aU4VRfMPxZK"
     # Creating an environment
-    environment = SandboxEnvironment(client_id=client_id, client_secret=client_secret)
-    client = PayPalHttpClient(environment)
+    # environment = SandboxEnvironment(client_id=client_id, client_secret=client_secret)
+    # client = PayPalHttpClient(environment)
+    #
+    # req = OrdersCreateRequest()
 
-    req = OrdersCreateRequest()
-
-    req.prefer('return=representation')
-
-    req.request_body(
-        {
-            "intent": "CAPTURE",
-            "purchase_units": [
-                {
-                    "amount": {
-                        "currency_code": "BRL",
-                        "value": "100.00"
-                    }
-                }
-            ]
-        }
-    )
+    # req.prefer('return=representation')
+    #
+    # req.request_body(
+    #     {
+    #         "intent": "CAPTURE",
+    #         "purchase_units": [
+    #             {
+    #                 "amount": {
+    #                     "currency_code": "BRL",
+    #                     "value": "100.00"
+    #                 }
+    #             }
+    #         ]
+    #     }
+    # )
 
     # try:
     #
@@ -198,7 +205,7 @@ def conta(request):
     #         ioe.status_code
 
 
-    pprint(client)
+    # pprint(client)
 
     clent = models.Cliente.objects.get(pk=request.user.id)
     cart = models.Carrinho.objects.get(cliente_cli=clent.id)

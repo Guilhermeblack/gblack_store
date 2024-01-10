@@ -82,6 +82,9 @@ src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
             <li class="drop-down"><a href="#">Produtos</a>
               <ul>
                 <li><a href="  #produtos"  >Todos</a></li>
+              
+              
+              
                 {% for p in produtos %}
                   {% ifchanged p.tipo %}<li><a href="#produtos" data-filter=".{{tp.tipo}}">{{p.get_tipo_display}}</a></li>{% endifchanged %}
                 {% endfor %}
@@ -94,12 +97,12 @@ src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
 
           <li class="nav-logo"> <i class="icon aling-content- end mt-0"></i> <a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a></li>
 
-<!--            {% if user.loja == True %}-->
-<!--                <li><a data-target="#newprod" data-toggle="modal" class="MainNavText" id="novoprod" href="#newprod">Novo Produto</a></li>-->
-<!--            {% else %}-->
-<!--                <li><a href="  #produtos">Mais pedidos</a></li>-->
+                {% if user.loja == True %}
+                    <li><a data-target="#newprod" data-toggle="modal" class="MainNavText" id="novoprod" href="#newprod">Novo Produto</a></li>
+                {% else %}
+{#                    <li><a href="  #produtos">Mais pedidos</a></li>#}
 
-<!--            {% endif %}-->
+                {% endif %}
 
 
             <li class="drop-down"><a href="#conta ">Conta</a>

@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class GerenciadorConfig(AppConfig):
-    name = 'gbstr'
+    name = 'loja'
+    label = 'loja'

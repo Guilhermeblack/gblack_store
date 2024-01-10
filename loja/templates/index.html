@@ -48,11 +48,10 @@
 
 
 </script>
-
-<!--{% load django_pagarme %}-->
+    
     {% for message in messages %}
         <div class="alert message {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
-            <button style="font-size: 22px;  align-self: right" type="button" class="close del-msg" data-dismiss="alert" aria-label="Close">
+            <button style="font-size: 22px; " type="button" class="close del-msg" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             {{ message }}

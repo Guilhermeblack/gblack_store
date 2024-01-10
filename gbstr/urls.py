@@ -3,7 +3,7 @@ from django.contrib import admin
 from loja import views
 
 from django.conf import urls, settings
-from gbstr import settings
+from . import settings
 from django.conf.urls.static import static
 
 app_name = 'gbstr'

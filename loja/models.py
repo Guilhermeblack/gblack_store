@@ -1,7 +1,6 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin,AbstractUser
 from django.contrib.auth.models import User
@@ -9,7 +8,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
-class Cliente( AbstractUser, PermissionsMixin):
+class Cliente(AbstractUser, PermissionsMixin):
 
     class Meta:
         permissions = [
@@ -21,7 +20,7 @@ class Cliente( AbstractUser, PermissionsMixin):
 
     # groups = models.ManyToManyField(User, related_name='grupos', blank=True)
     # user_permissions = models.ManyToManyField(User, related_name='permissoes', blank=True)
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     loja = models.BooleanField(default=False)
 
     nome = models.CharField(
@@ -30,11 +29,6 @@ class Cliente( AbstractUser, PermissionsMixin):
         blank=False,
         unique=True,
         # default='some_val'
-    )
-    senha = models.CharField(
-        max_length=50,
-        null=True,
-        blank=False,
     )
     telefone = models.CharField(
         max_length=20,
@@ -58,7 +52,7 @@ class Cliente( AbstractUser, PermissionsMixin):
     )
     data = models.DateTimeField(auto_now_add=True, blank=True)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['senha', 'cpf']
+    REQUIRED_FIELDS = [ 'cpf', 'username']
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -68,7 +62,7 @@ class Cliente( AbstractUser, PermissionsMixin):
 
 class Produto(models.Model):
 
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
 
 
     nome = models.CharField(
@@ -117,9 +111,7 @@ class Carrinho(models.Model):
         related_name="cliente_cli"
     )
 
-    id = models.AutoField(primary_key=True),
-
-
+    id = models.BigAutoField(primary_key=True)
 
     produto_cli= models.ManyToManyField(Produto, related_name='produto', blank=True)
 
@@ -140,7 +132,7 @@ class Tot_ped(models.Model):
     # def __str__(self):
     #     return self.id
 
-    id = models.AutoField(primary_key=True),
+    id = models.BigAutoField(primary_key=True)
     carrinho = models.ForeignKey(
         Carrinho,
         null=True,
@@ -187,7 +179,7 @@ class Venda(models.Model):
         related_name="carrinho_cli"
     )
 
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
 
 
     produto_cli= models.ManyToManyField(Produto, related_name='produto_cli', blank=False)
@@ -238,7 +230,7 @@ class Venda(models.Model):
 
 class Pagamentos(models.Model):
 
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
 
 
     carrinho_ped = models.ManyToManyField(Carrinho, related_name='carribgo_ped', blank=True)
