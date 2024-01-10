@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 
 from loja import forms,models
@@ -53,15 +54,15 @@ def index(request):
                 messages.warning(request, 'CPF/CNPJ inválidos')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
         elif 'nome_log' in rq:
-            encod = models.Cliente.objects.filter(nome=rq['nome_log'])
-            pprint(encod)
-            print(rq['senha'])
-            if encod:
-                encod = encod.get(senha=rq['senha'])
+
+            try:
+                encod = models.Cliente.objects.get(email=rq['nome_log'])
+            except ObjectDoesNotExist:
+                encod = None
 
             pprint(encod)
             # print(encod.errors)
-            if encod is not None:
+            if encod is not None and encod.check_password(rq['senha']):
                 login(request, encod)
                 messages.info(request, ' Bem vindo')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)

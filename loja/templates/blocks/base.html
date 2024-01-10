@@ -98,7 +98,7 @@ src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
           <li class="nav-logo"> <i class="icon aling-content- end mt-0"></i> <a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a></li>
 
                 {% if user.loja == True %}
-                    <li><a data-target="#newprod" data-toggle="modal" class="MainNavText" id="novoprod" href="#newprod">Novo Produto</a></li>
+{#                    <li><a data-target="#newprod" data-toggle="modal" class="MainNavText" id="novoprod" href="#newprod">Novo Produto</a></li>#}
                 {% else %}
 {#                    <li><a href="  #produtos">Mais pedidos</a></li>#}
 
@@ -129,9 +129,7 @@ src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
 
 <!--      BOTAO QUE ABRE FORM DE PRODUTO -->
 
-
-
-
+    
 
       <div class="modal fade" role="dialog" tabindex="-1" id="criar" style=" color: rgb(33,37,41);">
         <div class="modal-dialog modal-lg" role="document">
