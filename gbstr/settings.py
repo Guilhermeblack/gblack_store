@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'loja',
     'cloudinary',
     'django_pagarme',
-    'paypal.standard.pdt',
     # 'django-heroku'
 ]
 LOGOUT_REDIRECT_URL = '/'
@@ -210,6 +209,14 @@ cloudinary.config(
     api_secret="hvTxhjD4ZyfYigVrte6ucol0lio"
 )
 
+# GERENCIANET
+CLIENT_ID_GBLACK = 'Client_Id_ce88682777180d6ba912e693e0c4be5296d08395'
+CLIENT_SECRET_GBLACK = 'Client_Secret_f1394fc97a9f02df1efb12478575dbc861e03ca5'
+URL_GBLACK = 'https://pix-h.api.efipay.com.br'
+
+
+
+
 # Dados para integração com Pagarme
 # CHAVE_PAGARME_API_PRIVADA = 'ak_live_8jUYbLG5ojzgs9wisry243ycehrk1g'
 # CHAVE_PAGARME_CRIPTOGRAFIA_PUBLICA = 'ek_live_kwLtZhdUxIWxbGGC4cHq7cddKh5T21'
@@ -217,5 +224,5 @@ cloudinary.config(
 # # Para validar telefones no Brasil
 # PHONENUMBER_DEFAULT_REGION = 'BR'
 
-PAYPAL_IDENTITY_TOKEN = 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
-TKN_PAYPAL = 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
+# PAYPAL_IDENTITY_TOKEN = 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
+# TKN_PAYPAL = 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
