@@ -18,7 +18,6 @@ from pprint import pprint
 import cloudinary
 from django.views.decorators.csrf import csrf_protect
 
-from django.contrib.sessions.models import Session
 # Session.objects.all().delete()
 
 def index(request):
@@ -90,6 +89,9 @@ def index(request):
                     'prodtipo': models.Produto.STATUS_CHOICES
                   })
 #
+
+def term_condition(request):
+    return redirect('term_cond')
 
 @login_required(login_url='index')
 def logoutuser(request):
