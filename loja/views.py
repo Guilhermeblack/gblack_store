@@ -21,7 +21,6 @@ import cloudinary
 # from paypalcheckoutsdk.orders import OrdersCreateRequest
 from django.views.decorators.csrf import csrf_protect
 
-from django.contrib.sessions.models import Session
 # Session.objects.all().delete()
 
 def index(request):
@@ -93,6 +92,9 @@ def index(request):
                     'prodtipo': models.Produto.STATUS_CHOICES
                   })
 #
+
+def term_condition(request):
+    return redirect('term_cond')
 
 @login_required(login_url='index')
 def logoutuser(request):
@@ -324,30 +326,11 @@ def prod(request):
 @csrf_protect
 def pagamento(request):
 
-
-
-    tkn = settings.TKN_PAYPAL
-    url = "https://api.sandbox.paypal.com/v1/oauth2/token"
-
-    payload = "grant_type=client_credentials"
-    headers = {
-        'accept': "application/json",
-        'accept-language': "pt_BR",
-        'content-type': "application/x-www-form-urlencoded",
-        'authorization': tkn
-    }
-
-    response = requests.request("POST", url, data=payload, headers=headers)
-    pprint(response.content)
     # nonce = response.nonce
     # acesstkn = response.access_token
     # tkn_type =response.token_type
     # id_app = response.app_id
     # expire = response.expires_in
-
-    print(response.status_code)
-
-    print(response.text)
     if request.POST:
         print(' >>>', request.POST)
         pass
@@ -377,6 +360,7 @@ def pagamento(request):
 
         }
     )
+
 #
 #             if user is not None:
 #                 login(request, user)

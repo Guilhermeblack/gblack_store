@@ -16,6 +16,7 @@ urlpatterns = [
     path('pagamento', views.pagamento, name='pagamento'),
     path('', include('pwa.urls')),
     path('logout', views.logoutuser, name='logout'),
+    path('term_condition', views.term_condition, name='term_cond'),
 
     # path('checkout/', include('django_pagarme.urls'))
 
