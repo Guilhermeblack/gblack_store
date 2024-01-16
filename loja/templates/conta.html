@@ -6,140 +6,7 @@
 {% block conteudo %}
 {% load cloudinary %}
 
-    <script type="text/javascript">
-
-        $(document).on('blur','#pdt_nome', function(){
-            var prod = $(this).text().split(':')[1];
-
-            var proid = $(this).siblings('#pdt_id').val();
-            console.log('dalipdt >', proid);
-            $.ajax({
-                headers: { "X-CSRFToken": '{{csrf_token}}' },
-                type: 'POST',
-                url: "{% url 'prod' %}",
-                dataType: "json",
-                data: {
-                    'pdt_nome' :prod,
-                    'proid':proid
-                },
-                success: function (response) {
-                },
-                error: function (response) {
-                }
-            });
-
-        });
-
-        $(document).on('blur','#pdt_est', function(){
-            var prod = $(this).text().split(':')[1];
-            var proid = $(this).siblings('#pdt_id').val();
-            $.ajax({
-                headers: { "X-CSRFToken": '{{csrf_token}}' },
-                type: 'POST',
-                url: "{% url 'prod' %}",
-                dataType: "json",
-                data: {
-                    'pdt_est' :prod,
-                    'proid':proid
-                },
-                success: function (response) {
-                },
-                error: function (response) {
-                }
-            });
-
-        });
-
-        $(document).on('blur','#pdt_des', function(){
-            var prod = $(this).text().split(':')[1];
-            console.log('dalipdt >', prod);
-            var proid = $(this).siblings('#pdt_id').val();
-            $.ajax({
-                headers: { "X-CSRFToken": '{{csrf_token}}' },
-                type: 'POST',
-                url: "{% url 'prod' %}",
-                dataType: "json",
-                data: {
-                'proid':proid,
-                'pdt_des' :prod
-                },
-                success: function (response) {
-                },
-                error: function (response) {
-                }
-            });
-
-        });
-
-        $(document).on('blur','#pdt_pre', function(){
-            var prod = $(this).text().split(':')[1];
-            console.log('dalipdt >', prod);
-            var proid = $(this).siblings('#pdt_id').val();
-            $.ajax({
-                headers: { "X-CSRFToken": '{{csrf_token}}' },
-                type: 'POST',
-                url: "{% url 'prod' %}",
-                dataType: "json",
-                data: {
-                    'proid':proid,
-                    'pdt_pre' :prod
-                },
-                success: function (response) {
-                },
-                error: function (response) {
-                }
-            });
-
-
-        });
-
-        $(document).on('blur','#pdt_tipo', function(){
-            var prod = $(this).val();
-            console.log('éoprod', prod);
-            var proid = $(this).parent().siblings('#pdt_id').val();
-            $.ajax({
-                headers: { "X-CSRFToken": '{{csrf_token}}' },
-                type: 'POST',
-                url: "{% url 'prod' %}",
-                dataType: "json",
-                data: {
-                    'pdt_tipo' :prod,
-                    'proid':proid
-                },
-                success: function (response) {
-                },
-                error: function (response) {
-                }
-            });
-
-        });
-
-        $(document).on('click','#btn_del',function(){
-            var prod = $(this).val();
-            var proid = $('#pdt_id').siblings('#pdt_id').val();
-            $.ajax({
-                headers: { "X-CSRFToken": '{{csrf_token}}' },
-                type: 'POST',
-                url: "{% url 'prod' %}",
-                dataType: "json",
-                data: {
-                    'btn_del' :prod,
-                    'proid':proid
-                },
-                success: function (response) {
-                },
-                error: function (response) {
-                }
-            });
-
-        });
-        $(document).on('click','data-toggle',function(e) {
-            if( $(e.target).is('a') ) {
-                $(this).collapse('hide');
-            }
-        });
-
-    </script>
+    <script src="{% static 'js/gb_scripts.js' %}"></script>
 
     {% for message in messages %}
         <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
@@ -226,7 +93,7 @@
         <ul class="faq-list">
           {% for p in produtos %}
             <li data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
-              <a data-toggle="ta_{{p.id}}" class="collapse" href="#" ><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
+              <a data-toggle="ta_{{p.id}}" class="collapse"  ><b>{{p.nome}}</b><i class="bx bx-chevron-down icon-show"></i><i class="bx bx-x icon-close"></i></a>
               <div id="ta_{{p.id}}" class="collapse  " data-parent=".faq-list">
                 <div class="row ">
                     <input type="hidden" value="{{p.id}}" name="pdt_id" id="pdt_id">
@@ -380,25 +247,30 @@
             <div id="checkout-button-container">
                 
                 {{ 'CHECKOUT' }}
+                <script>
+                    var url_pag = "{% url 'pagamento' %}";
+                    var csrf = "{{csrf_token}}";
+                </script>
+                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" id="pix_btn" data-target="#modpix" value="{{carrinho.valor}}_pix_{{ user.username }}" url="{% url 'pagamento' %}">{{ 'PIX' }}</button>
+
                 <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modcartao">{{ 'CARTÃO' }}</button>
-                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modpix">{{ 'PIX' }}</button>
             </div>
-              <div class="modal fade" id="modcartao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal fade" id="modpix" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    ...
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" id="pagmento">
+                        ...qr code
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                      </div>
                 </div>
               </div>
             </div>

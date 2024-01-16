@@ -3,16 +3,16 @@ from datetime import datetime, timedelta
 from gbstr.settings import CLIENT_SECRET_GBLACK, CLIENT_ID_GBLACK, URL_GBLACK
 
 class OAuth2Client:
-    def __init__(self, token_url, client_id, client_secret, username, password):
+    def __init__(self, token_url, client_id, client_secret):
         self.token_url = token_url
         self.client_id = client_id
         self.client_secret = client_secret
-        self.username = username
-        self.password = password
         self.access_token = None
         self.token_type = None
+        self.expires_at = None
 
     def authenticate_token(self):
+
         payload = {
             'grant_type': 'client_credentials',
             'client_id': self.client_id,
@@ -32,18 +32,18 @@ class OAuth2Client:
 
 
     def get_auth(self):
-        if self.expires_at < datetime.now():
+        if self.expires_at is None or self.expires_at < datetime.now():
             self.authenticate_token()
 
         return self.access_token
 
 
 # Exemplo de uso:
-oauth2_client = OAuth2Client(
+get_oauth2_client = OAuth2Client(
     token_url=URL_GBLACK,
     client_id=CLIENT_ID_GBLACK,
     client_secret=CLIENT_SECRET_GBLACK
 )
 
-oauth2_client.get_auth()
+# oauth2_client.get_auth()
 
