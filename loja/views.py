@@ -1,8 +1,8 @@
 from datetime import date
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
-
+from django.http import HttpResponse, JsonResponse
+from decimal import Decimal, ROUND_DOWN
 from loja import forms,models
 from gbstr import settings
 from loja.widgets import oauth2_client, servico_cobranca
@@ -265,15 +265,26 @@ def pagamento(request):
 
         if request.POST['tipo_pagamento'] == 'pix':
             # pag = widgets get_qrcode(request.POST.valor_pagamento, request.POST.usuario);
-            valor = str(request.POST['valor_pagamento']).replace(',','.')
             cliente = str(request.POST['usuario'])
 
+            valor = formata_valor(request.POST['valor_pagamento']);
 
-            cob = servico_cobranca.GerencianetService.create_pix_charge( amount=valor,chave_pix= '40844509876', cliente=cliente )
+            print(valor)
+            # valor = round(request.POST['valor_pagamento'], 2)
+
+
+            cob = servico_cobranca.GerencianetService.create_pix_charge(amount=valor, chave_pix='40844509876', cliente=cliente )
             txid = cob.get('txid')
-            print('txid  -  '+txid)
+            print(txid)
             qr_code = servico_cobranca.GerencianetService.get_qr_code(txid)
-            return qr_code
+
+            print('qr_code', qr_code)
+            response_data = {
+                'qr_code': qr_code.get('qr_code'),
+                'qr_code_imagem': qr_code.get('imagemQrcode'),
+                'qr_code_link': qr_code.get('linkVisualizacao')
+            }
+            return JsonResponse(response_data)
         else:
             pass
             # pag = widgets get_card(request.POST.valor_pagamento, request.POST.usuario);
@@ -307,3 +318,9 @@ def pagamento(request):
         }
     )
 
+def formata_valor(val):
+
+    valor = str(val).replace('.', '')
+    valor = float(valor.replace(',', '.'))
+    valor = f"{valor:.2f}"
+    return valor
