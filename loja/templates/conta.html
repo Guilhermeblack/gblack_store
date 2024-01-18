@@ -7,7 +7,28 @@
 {% load cloudinary %}
 
     <script src="{% static 'js/gb_scripts.js' %}"></script>
+{#    <script src="{% static 'css/gb_style.css' %}"></script>#}
+<style>
+        [name="pagmento_wait"] {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    
     {% for message in messages %}
         <div class="alert {{ message.tags }} alert-dismissible" id="msg" role="alert" style="background-color:powderblue; margin-top: 20px; padding: 10px; font-size: medium;  ">
             <button style="font-size: 22px;  align-self: flex-end" type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -264,9 +285,10 @@
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="modal-body" id="pagmento">
-                        ...qr code
-                      </div>
+                        <div class="modal-body" name="pagmento_wait" id="pagmento_wait"></div>
+                        <div class="modal-body" id="pagmento"></div>
+                        <div class="modal-body" id="pagmento_code"></div>
+                        <div class="modal-body" id="pagmento_link"></div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Save changes</button>
