@@ -20,6 +20,9 @@ import cloudinary
 from django.views.decorators.csrf import csrf_protect
 
 # Session.objects.all().delete()
+def term_condition(request):
+    return render(request, 'privacy_policy_gb.html')
+
 
 def index(request):
 
@@ -89,10 +92,6 @@ def index(request):
                     'produtos': pdt,
                     'prodtipo': models.Produto.STATUS_CHOICES
                   })
-#
-
-def term_condition(request):
-    return redirect('term_cond')
 
 @login_required(login_url='index')
 def logoutuser(request):
