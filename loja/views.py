@@ -265,7 +265,7 @@ def pagamento(request):
         if request.POST['tipo_pagamento'] == 'pix':
             # pag = widgets get_qrcode(request.POST.valor_pagamento, request.POST.usuario);
             cliente = str(request.POST['usuario'])
-            valor = formata_valor(request.POST['valor_pagamento']);
+            valor = formata_valor(request.POST['valor_pagamento'])
 
             cob = servico_cobranca.GerencianetService.create_pix_charge(amount=valor, chave_pix='40844509876', cliente=cliente )
             txid = cob.get('txid')

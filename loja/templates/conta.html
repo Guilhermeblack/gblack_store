@@ -7,6 +7,64 @@
 {% load cloudinary %}
 
     <script src="{% static 'js/gb_scripts.js' %}"></script>
+    <script src="{% static 'js/efi_cobrancas.js' %}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $gn.ready(function (checkout) {
+            var form = document.getElementById('formulario_pix');
+        
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+    
+                var nomeCliente =       document.getElementById('nomeCliente').value;
+                var numeroCpf =         document.getElementById('numeroCpf').value;
+                var numeroCartao =      document.getElementById('numeroCartao').value;
+                var inputBandeira =     document.getElementById('inputBandeira').value;
+                var inputMesVenc =      document.getElementById('inputMesVenc').value;
+                var inputAnoVenc =      document.getElementById('inputAnoVenc').value;
+                var codSeg =            document.getElementById('codSeg').value;
+                var inputParc =         document.getElementById('inputParc').value;
+    
+                {#console.log(numeroCartao,inputBandeira, inputMesVenc,inputAnoVenc, codSeg  )#}
+                
+                    checkout.getPaymentToken(
+                        {
+                            brand: inputBandeira,
+                            number: numeroCartao,
+                            cvv: codSeg,
+                            expiration_month: inputMesVenc,
+                            expiration_year: inputAnoVenc,
+                            reuse: false
+                        },
+                        function (error, response) {
+                            if (error) {
+                                console.error(error);
+                            } else {
+                                console.log(response);
+                                console.log('getpaymenttt');
+                            }
+                        }
+                    );
+    
+                    checkout.getInstallments(
+                        50000,
+                        inputBandeira,
+                        function (error, response) {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log('getinstallments');
+                                console.log(response);
+                            }
+                        }
+                    );
+    
+                
+                });
+        });
+    });
+    
+    </script>
 {#    <script src="{% static 'css/gb_style.css' %}"></script>#}
 <style>
         [name="pagmento_wait"] {
@@ -274,10 +332,10 @@
                 </script>
                 <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" id="pix_btn" data-target="#modpix" value="{{carrinho.valor}}_pix_{{ user.username }}" url="{% url 'pagamento' %}">{{ 'PIX' }}</button>
 
-                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modcartao">{{ 'CARTÃO' }}</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" id="cartao_btn" data-toggle="modal" data-target="#modcartao">{{ 'CARTÃO' }}</button>
             </div>
-              <div class="modal fade" id="modpix" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
+              <div class="modal fade bd-example-modal-lg" id="modpix" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
@@ -285,17 +343,114 @@
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                        <div class="modal-body" name="pagmento_wait" id="pagmento_wait"></div>
-                        <div class="modal-body" id="pagmento"></div>
-                        <div class="modal-body" id="pagmento_code"></div>
-                        <div class="modal-body" id="pagmento_link"></div>
+                        <div class="modal-body">
+                            <div class="modal-body"  name="pagmento_wait" id="pagmento_wait"></div>
+                            <div class="modal-body" id="pagmento"></div>
+                            <div class="modal-body" id="pagmento_code"></div>
+                            <div class="modal-body" id="pagmento_link"></div>
+                        </div>
+
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Save changes</button>
                       </div>
                 </div>
               </div>
-            </div>
+              </div>
+              <div class="modal fade" id="modcartao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                        <div class="modal-body" name="pagmento_cartao">
+                            
+                            <form id="formulario_pix">
+                                <div class="form-group row">
+                                  <div class=" col-md-6">
+                                    <label for="nomeCliente">Nome Completo</label>
+                                    <input type="text" class="form-control" id="nomeCliente" aria-describedby="nome do titular" placeholder="Nome do titular do cartão">
+                                    <small id="nameHelp" class="form-text text-muted">Nome do titular do cartão</small>
+                                  </div>
+                                  <div class="col-md-6  ">
+                                    <label for="numeroCpf">CPF</label>
+                                    <input type="text" class="form-control" id="numeroCpf" aria-describedby="numero do cpf" placeholder="CPF do titular do cartão">
+                                    <small id="cpfHelp" class="form-text text-muted">Informe o cpf do titular do cartão</small>
+                                  </div>
+                              </div>
+                                <hr>
+                              <div class="form-group row">
+                                  <div class=" col-md-8">
+                                    <label for="numeroCartao">Numero do Cartão</label>
+                                    <input type="text" class="form-control" id="numeroCartao" aria-describedby="num Cartao" placeholder="Insira o Numero do Cartão">
+                                    <small id="cardHelp" class="form-text text-muted">Informe o numero do cartão</small>
+                                  </div>
+                                  <div class="col-sm-4  ">
+                                    <label for="inputBandeira">Bandeira</label>
+                                      <select class="form-control" id="inputBandeira" placeholder="Bandeiras">
+                                          <option value="visa">Visa</option>
+                                          <option value="master">Master</option>
+                                          <option value="americanexpress">AmericanExpress</option>
+                                          <option value="elo">Elo</option>
+                                          <option value="hipercard">Hipercard</option>
+                                      </select>
+                                  </div>
+                              </div>
+                                <hr>
+                                <div class="form-group row">
+        
+                                  <div class="col-sm-4  ">
+                                      <label for="inputMesVenc">Mês de vencimento</label>
+                                      <select class="form-control" id="inputMesVenc" placeholder="Mês de vencimento">
+                                          <option value="1">1</option>
+                                          <option value="2">2</option>
+                                          <option value="3">3</option>
+                                          <option value="4">4</option>
+                                          <option value="5">5</option>
+                                          <option value="6">6</option>
+                                          <option value="7">7</option>
+                                          <option value="8">8</option>
+                                          <option value="9">9</option>
+                                          <option value="10">10</option>
+                                          <option value="11">11</option>
+                                          <option value="12">12</option>
+          
+                                      </select>
+                                  </div>
+                                  <div class="col-sm-4  ">
+                                      <label for="inputAnoVenc">Ano de vencimento</label>
+                                      <input type="text" class="form-control" maxlength="4" accept="" id="inputAnoVenc" aria-describedby="ano Vencimento" placeholder="Insira o ano de vencimento">
+                                      
+                                  </div>
+                                    
+                                  <div class=" col-md-4">
+                                    <label for="codSeg">Código de segurança (cvv)</label>
+                                    <input type="text" class="form-control" maxlength="3" accept="" id="codSeg" aria-describedby="num Cartao" placeholder="Insira o Código de segurança">
+                                      <small id="codsegHelp" class="form-text text-muted">O código de segurança é uma sequência de 3 digitos que fica no verso do cartão</small>
+                                  </div>
+                              </div>
+                                <hr>
+                              <div class="form-group row d-flex justify-content-center">
+                                  <div class=" col-sm-6">
+                                    <label for="inputParc">Parcelamento</label>
+                                    <select class="form-control" id="inputParc" placeholder="Parcelas">
+                                  
+              
+                                    </select>
+                                </div>
+                              </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-success">Ok</button>
+                                    <button type="button" class="btn btn-warning" data-dismiss="modal">Sair</button>
+                                  </div>
+                            </form>
+                        </div>
+                </div>
+              </div>
+              </div>
           </div>
         </div>
 

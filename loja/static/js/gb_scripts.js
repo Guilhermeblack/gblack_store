@@ -1,3 +1,42 @@
+        $(document).on('click','#cartao_btn', function(){
+
+            var dados  = $(this).val();
+            dados = dados.split('_');
+
+            $.ajax({
+                headers: { "X-CSRFToken": csrf },
+                type: 'POST',
+                url: url_pag,
+                dataType: "json",
+                data: {
+                    'valor_pagamento' :dados[0],
+                    'tipo_pagamento':dados[1],
+                    'usuario':dados[2]
+                },
+                success: function (response) {
+                    console.log(response.qr_code_imagem)
+                    $("#pagmento_wait").addClass("hidden");
+                    var imagemElemento = document.createElement('img');
+                    var linkElemento = document.createElement('a');
+
+                    imagemElemento.src = response.qr_code_imagem;
+
+                    document.getElementById('pagmento').appendChild(imagemElemento);
+                    document.getElementById('pagmento_code').innerHTML =response.qr_code;
+
+                    linkElemento.textContent = response.qr_code_link;
+                    linkElemento.href = response.qr_code_link;
+                    document.getElementById('pagmento_link').appendChild(linkElemento);
+                },
+                error: function (response) {
+                },
+                complete: function () {
+
+                }
+            });
+
+        });
+
         $(document).on('click','#pix_btn', function(){
 
             var dados  = $(this).val();
