@@ -1,3 +1,4 @@
+import json
 from datetime import date
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -5,7 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from decimal import Decimal, ROUND_DOWN
 from loja import forms,models
 from gbstr import settings
-from loja.widgets import oauth2_client, servico_cobranca
+from loja.widgets import oauth2_client, servico_cobranca, envio_notificacao
 from django.contrib import messages
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login
@@ -18,6 +19,7 @@ from django.contrib.auth.models import Permission
 from pprint import pprint
 import cloudinary
 from django.views.decorators.csrf import csrf_protect
+
 
 # Session.objects.all().delete()
 def term_condition(request):
@@ -69,6 +71,60 @@ def index(request):
             else:
                 messages.info(request, 'Usuário inexistente/Bloqueado')
                 return redirect(settings.LOGIN_REDIRECT_URL, permanent=True)
+        elif 'email_lead' in rq:
+
+            cli_ip = obter_ip(request)
+            geoloc = obter_geolocalizacao_ip(cli_ip)
+            print(geoloc)
+
+            try:
+                loc = f'city: {geoloc.city} - region: {geoloc.region} - country_name: {geoloc.country_name} - latitude: {geoloc.latitude} - longitude: {geoloc.longitude} '
+            except:
+                loc = ''
+
+
+            # print('chegueiuai',rq)
+            # armazenar dados lead
+
+            try:
+                email_lead =  rq['email_lead']
+            except:
+                email_lead = None
+
+            try:
+                telefone_lead =  rq['telefone_lead']
+            except:
+                telefone_lead = None
+
+            try:
+                nome_lead =  rq['nome_lead']
+            except:
+                nome_lead = None
+
+
+
+            models.Leads.objects.create(
+                email_lead=email_lead,
+                ip_lead=cli_ip,
+                endereco=loc,
+                telefone=telefone_lead,
+                nome=nome_lead
+            )
+
+            # notificar novo lead
+            # destinatario, assunto, template, mensagem, assunto
+            data_notificacao = {}
+            data_notificacao['destinatario'] = 'gblacklojaonline@gmail.com',
+            data_notificacao['assunto'] = 'NOVO LEAD',
+            data_notificacao['template'] = 'notification/notification_lead.html',
+            data_notificacao['mensagem'] = f'Lead: {email_lead}, localizado: {loc}, nome: {nome_lead}, telefone: {telefone_lead}',
+            data_notificacao['telefone'] = telefone_lead,
+            data_notificacao['nome'] = nome_lead,
+            data_notificacao['email'] = email_lead,
+            enviar_notificacao(json.dumps(data_notificacao))
+
+
+
     if request.user.is_authenticated:
         carrinho = models.Carrinho.objects.get(cliente_cli= request.user.id)
         pprint(carrinho.id)
@@ -317,3 +373,34 @@ def formata_valor(val):
     valor = float(valor.replace(',', '.'))
     valor = f"{valor:.2f}"
     return valor
+
+def obter_ip(request):
+    ip = request.META.get('HTTP_X_FORWARDED_FOR')
+
+    if not ip:
+        ip = request.META.get('REMOTE_ADDR')
+
+    return ip
+
+def obter_geolocalizacao_ip(ip):
+    # Substitua 'sua_chave_api' pela chave de API gratuita do ipinfo.io
+    api_key = 'abcbb8f7a003a3058982574867d04f42db1b2be46817f62c2c5b72a0'
+
+    url = f'https://api.ipdata.co/{ip}?api-key={api_key}&fields=ip,is_eu,city,region,region_code,country_name,country_code,continent_name,continent_code,latitude,longitude,postal,calling_code,flag,emoji_flag,emoji_unicode'
+
+    response = requests.get(url)
+    dados_geolocalizacao = response.json()
+
+    return dados_geolocalizacao
+
+def enviar_notificacao(request):
+    assunto = request.assunto
+    template = request.template
+    contexto = {'mensagem': request.mensagem, 'assunto': request.assunto}
+
+    destinatario = request.destinatario
+    envio_notificacao.enviar_email(destinatario, assunto, template, contexto)
+    destinatario_fone = settings.TWILIO_PHONE_NUMBER
+    mensagem = request.mensagem
+
+    envio_notificacao.enviar_whatsapp(destinatario_fone, mensagem)

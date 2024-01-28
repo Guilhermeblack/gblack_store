@@ -215,6 +215,19 @@ CLIENT_SECRET_GBLACK = 'Client_Secret_f1394fc97a9f02df1efb12478575dbc861e03ca5'
 URL_GBLACK = 'https://pix-h.api.efipay.com.br'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'gblacklojaonline@gmail.com'
+EMAIL_HOST_PASSWORD = 'glm14407486'
+
+#twilio
+# recover  EC31ZN3FWAFK6E9PDT4FJFPA
+
+TWILIO_ACCOUNT_SID = 'AC3ae32d970db7bc31f1abdb686754e712'
+TWILIO_AUTH_TOKEN = '4517d120b1d596043c54d78acda11c82'
+TWILIO_PHONE_NUMBER = '+5516994288243'
 
 
 # Dados para integração com Pagarme

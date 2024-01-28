@@ -231,8 +231,6 @@ class Venda(models.Model):
 class Pagamentos(models.Model):
 
     id = models.BigAutoField(primary_key=True)
-
-
     carrinho_ped = models.ManyToManyField(Carrinho, related_name='carribgo_ped', blank=True)
 
     STATUS_PGT = (
@@ -279,8 +277,29 @@ class Pagamentos(models.Model):
 
     objects = models.Manager()
 
+class Leads(models.Model):
 
+    id = models.BigAutoField(primary_key=True)
+    email_lead = models.EmailField(max_length=70,blank=True,unique=True)
+    ip_lead = models.GenericIPAddressField(null=True)
+    endereco = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
+    )
+    telefone = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
 
+    )
+    nome = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+
+    )
+    objects = models.Manager()
 # class logform(models.Model):
 #     senha = models.CharField(
 #         max_length=80,
