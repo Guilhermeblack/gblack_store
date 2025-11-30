@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django.contrib import admin
-from loja import views
+from loja import views, checkout_views
 
 from django.conf import urls, settings
 from . import settings
@@ -14,9 +14,16 @@ urlpatterns = [
     path('conta', views.conta, name='conta'),
     path('prod', views.prod, name='prod'),
     path('pagamento', views.pagamento, name='pagamento'),
-    path('', include('pwa.urls')),
+    # path('', include('pwa.urls')),
     path('logout', views.logoutuser, name='logout'),
     path('privacy_poli', views.term_condition, name='term_cond'),
+    
+    # Checkout Routes
+    path('checkout/cart/', checkout_views.checkout_cart, name='checkout_cart'),
+    path('checkout/address/', checkout_views.checkout_address, name='checkout_address'),
+    path('checkout/payment/', checkout_views.checkout_payment, name='checkout_payment'),
+    path('checkout/process/', checkout_views.process_payment, name='process_payment'),
+    path('checkout/success/', checkout_views.checkout_success, name='checkout_success'),
 
     # path('checkout/', include('django_pagarme.urls'))
 

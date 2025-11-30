@@ -14,12 +14,12 @@ from pathlib import Path
 import cloudinary  # cloudinary
 import cloudinary.uploader  # cloudinary
 import cloudinary.api  # cloudinary
-import psycopg2.extensions
+# import psycopg2.extensions
 import os
 
 # os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
 import django
-import static
+# import static
 from django.conf.global_settings import DATABASES
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,12 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_ajax',
-    'pwa',
+    # 'django_ajax',
+    # 'pwa',
     'gbstr',
     'loja',
     'cloudinary',
-    'django_pagarme',
+    # 'django_pagarme',
     # 'django-heroku'
 ]
 LOGOUT_REDIRECT_URL = '/'

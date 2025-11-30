@@ -1,4 +1,5 @@
 {% load pwa %}
+
 <head>
   {% load static %}
   {% progressive_web_app_meta %}
@@ -16,38 +17,44 @@
   <link href=" {% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
-  <link href=" https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href=" https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href=" {% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href=" {% static 'vendor/icofont/icofont.min.css' %}" rel="stylesheet">
   <link href=" {% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
   <link href=" {% static 'vendor/venobox/venobox.css' %}" rel="stylesheet">
-<!--  <link href=" {% static 'vendor/owl.carousel/owl.carousel.min.css' %}" rel="stylesheet">-->
+  <!--  <link href=" {% static 'vendor/owl.carousel/owl.carousel.min.css' %}" rel="stylesheet">-->
   <link href=" {% static 'vendor/aos/aos.css' %}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href=" {% static 'css/style.css' %}" rel="stylesheet">
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <!-- Facebook Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '936242826568810');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Facebook Pixel Code -->
+  <script>
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return; n = f.fbq = function () {
+        n.callMethod ?
+        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      };
+      if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+      n.queue = []; t = b.createElement(e); t.async = !0;
+      t.src = v; s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s)
+    }(window, document, 'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '936242826568810');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1" /></noscript>
+  <!-- End Facebook Pixel Code -->
 </head>
 
 <body>
@@ -55,12 +62,15 @@ src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
 
   <!-- ======= Hero Section ======= -->
   <section id="hero">
-    <div class="hero-container" >
+    <div class="hero-container">
 
-      <a href="#about" class="hero-logo scrollto" data-aos="zoom-in"><img src=" {% static 'img/hero-logo.png' %}" alt=""></a>
-      <a href="  #about" class="btn-get-started bg-transparent scrollto"><h1 data-aos="zoom-in">GBlack Store</h1>
-      <h2 data-aos="fade-up">Simplesmente foda</h2></a>
-<!--      <a data-aos="fade-up" href="  #about" class="btn-get-started scrollto">Get Started</a>-->
+      <a href="#about" class="hero-logo scrollto" data-aos="zoom-in"><img src=" {% static 'img/hero-logo.png' %}"
+          alt=""></a>
+      <a href="  #about" class="btn-get-started bg-transparent scrollto">
+        <h1 data-aos="zoom-in">GBlack Store</h1>
+        <h2 data-aos="fade-up">Simplesmente foda</h2>
+      </a>
+      <!--      <a data-aos="fade-up" href="  #about" class="btn-get-started scrollto">Get Started</a>-->
     </div>
   </section><!-- End Hero -->
 
@@ -75,51 +85,49 @@ src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
 
       <nav class="nav-menu d-none d-lg-block">
         <ul class="nav-inner">
-<!--          <li class="active"><a href="#sobre" class="scrollto">Gblack</a></li>-->
+          <!--          <li class="active"><a href="#sobre" class="scrollto">Gblack</a></li>-->
           {% if 'conta' in request.path %}
-            <li class=""><a href="{% url 'index' %}">Produtos</a>
-          {% else %}
-            <li class="drop-down"><a href="#">Produtos</a>
-              <ul>
-                <li><a href="  #produtos"  >Todos</a></li>
-              
-              
-              
-                {% for p in produtos %}
-                  {% ifchanged p.tipo %}<li><a href="#produtos" data-filter=".{{tp.tipo}}">{{p.get_tipo_display}}</a></li>{% endifchanged %}
-                {% endfor %}
+          <li class=""><a href="{% url 'index' %}">Produtos</a>
+            {% else %}
+          <li class="drop-down"><a href="#">Produtos</a>
+            <ul>
+              <li><a href="  #produtos">Todos</a></li>
 
-              </ul>
-            </li>
+
+
+              {% for p in produtos %}
+              {% ifchanged p.tipo %}<li><a href="#produtos" data-filter=".{{tp.tipo}}">{{p.get_tipo_display}}</a></li>{%
+              endifchanged %}
+              {% endfor %}
+
+            </ul>
+          </li>
           {% endif %}
 
 
 
-          <li class="nav-logo"> <i class="icon aling-content- end mt-0"></i> <a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a></li>
+          <li class="nav-logo"> <i class="icon aling-content- end mt-0"></i> <a href="{% url 'index' %}"><img
+                src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a></li>
 
-                {% if user.loja == True %}
-{#                    <li><a data-target="#newprod" data-toggle="modal" class="MainNavText" id="novoprod" href="#newprod">Novo Produto</a></li>#}
-                {% else %}
-{#                    <li><a href="  #produtos">Mais pedidos</a></li>#}
+          <li><a href="{% url 'checkout_cart' %}">Carrinho</a></li>
 
-                {% endif %}
+          <li class="drop-down"><a href="#conta ">Conta</a>
+            {% if user.is_authenticated %}
+            <ul>
+              <li><a href="  {% url 'conta' %}">Minha conta</a></li>
+              <li><a href="  {% url 'logout' %}">Sair</a></li>
 
+            </ul>
+            {% else %}
+            <ul>
+              <li><a data-target="#logar" data-toggle="modal" class="MainNavText" id="entrarconta"
+                  href="#logar">Entrar</a></li>
+              <li><a data-target="#criar" data-toggle="modal" class="MainNavText" id="criarconta"
+                  href="#criar">Criar</a></li>
 
-            <li class="drop-down"><a href="#conta ">Conta</a>
-              {% if user.is_authenticated  %}
-                <ul>
-                  <li><a href="  {% url 'conta' %}">Minha conta</a></li>
-                  <li><a href="  {% url 'logout' %}">Sair</a></li>
-
-                </ul>
-              {% else %}
-                <ul>
-                  <li><a data-target="#logar" data-toggle="modal" class="MainNavText" id="entrarconta" href="#logar">Entrar</a></li>
-                  <li><a data-target="#criar" data-toggle="modal" class="MainNavText" id="criarconta" href="#criar">Criar</a></li>
-
-                </ul>
-              {% endif %}
-            </li>
+            </ul>
+            {% endif %}
+          </li>
 
 
 
@@ -127,57 +135,63 @@ src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
       </nav><!-- .nav-menu -->
 
 
-<!--      BOTAO QUE ABRE FORM DE PRODUTO -->
+      <!--      BOTAO QUE ABRE FORM DE PRODUTO -->
 
-    
+
 
       <div class="modal fade" role="dialog" tabindex="-1" id="criar" style=" color: rgb(33,37,41);">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
-              <blockquote class="blockquote text-center">
-                  <p class="my-0"><b>{{'NOVA CONTA'}}</b></p>
-              </blockquote>
+            <blockquote class="blockquote text-center">
+              <p class="my-0"><b>{{'NOVA CONTA'}}</b></p>
+            </blockquote>
             {% if criar %}
-              <div class="col-lg mt-3 mt-lg-0">
-                <form method="post" role="form" data-aos="fade-on">
-                  <div class="form-row mt-4 pt-3">
-                    <div class="col-md-6 form-group">
-                      <input type="text" name="nome" class="form-control" id="nome" placeholder="Nome" data-rule="minlen:4" data-msg="Entre com um nome de usuário válido" />
-                      <div class="validate"></div>
-                    </div>
-                    <div class="col-md-6 form-group">
-                      <input type="text" class="form-control" name="cpf" id="cpf" placeholder="cpf/cnpj" data-rule="cpf" data-msg="entre com um documentp válido" />
-                      <div class="validate"></div>
-                    </div>
+            <div class="col-lg mt-3 mt-lg-0">
+              <form method="post" role="form" data-aos="fade-on">
+                <div class="form-row mt-4 pt-3">
+                  <div class="col-md-6 form-group">
+                    <input type="text" name="nome" class="form-control" id="nome" placeholder="Nome"
+                      data-rule="minlen:4" data-msg="Entre com um nome de usuário válido" />
+                    <div class="validate"></div>
                   </div>
-                    <div class="form-row mt-3">
-                        <div class="col-md-6 form-group">
-                          <input type="text" name="telefone" class="form-control" id="telefone" placeholder="Telefone" data-rule="minlen:4" data-msg="Entre com o telefone" />
-                          <div class="validate"></div>
-                        </div>
-                        <div class="col-md-6 form-group">
-                          <input type="email" class="form-control" name="email" id="email" placeholder="email" data-rule="email" data-msg="Please enter a valid email" />
-                          <div class="validate"></div>
-                        </div>
+                  <div class="col-md-6 form-group">
+                    <input type="text" class="form-control" name="cpf" id="cpf" placeholder="cpf/cnpj" data-rule="cpf"
+                      data-msg="entre com um documentp válido" />
+                    <div class="validate"></div>
                   </div>
-                    <div class="form-row mt-3">
-                        <div class="col-md-6 form-group">
-                          <input type="password" name="senha" class="form-control" id="senha" placeholder="Senha" data-rule="minlen:4" data-msg="Insira sua senha" />
-                          <div class="validate"></div>
-                        </div>
-                        <div class="col-md-6 form-group">
-                          <input type="password" class="form-control" name="senha_rep" id="senha_rep" placeholder="Repita a senha" data-rule="possword" data-msg="Repita a mesma senha" />
-                          <div class="validate"></div>
-                        </div>
-                    </div>
+                </div>
+                <div class="form-row mt-3">
+                  <div class="col-md-6 form-group">
+                    <input type="text" name="telefone" class="form-control" id="telefone" placeholder="Telefone"
+                      data-rule="minlen:4" data-msg="Entre com o telefone" />
+                    <div class="validate"></div>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="email"
+                      data-rule="email" data-msg="Please enter a valid email" />
+                    <div class="validate"></div>
+                  </div>
+                </div>
+                <div class="form-row mt-3">
+                  <div class="col-md-6 form-group">
+                    <input type="password" name="senha" class="form-control" id="senha" placeholder="Senha"
+                      data-rule="minlen:4" data-msg="Insira sua senha" />
+                    <div class="validate"></div>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="password" class="form-control" name="senha_rep" id="senha_rep"
+                      placeholder="Repita a senha" data-rule="possword" data-msg="Repita a mesma senha" />
+                    <div class="validate"></div>
+                  </div>
+                </div>
 
-                    {% csrf_token %}
-                  <button type="submit" class="btn-lg form-control"><b>Criar</b></button>
-                </form>
+                {% csrf_token %}
+                <button type="submit" class="btn-lg form-control"><b>Criar</b></button>
+              </form>
 
 
-                </form>
-              </div>
+              </form>
+            </div>
 
             {% endif %}
           </div>
@@ -190,24 +204,26 @@ src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
               <p class="my-0"><b>{{'ACESSAR CONTA'}}</b></p>
             </blockquote>
             {% if logar %}
-              <div class="col-lg mt-3 mt-lg-0">
-                <form  method="post" role="form" data-aos="fade-on">
-                  <div class="form-row mt-4 pt-3">
-                    <div class="col-md-6 form-group">
-                      <input type="text" name="nome_log" class="form-control" id="nome_log" placeholder="Nome de acesso" data-rule="minlen:4" data-msg="Entre com seu login" />
-                      <div class="validate"></div>
-                    </div>
-                    <div class="col-md-6 form-group">
-                      <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" data-rule="email" data-msg="insira sua senha" />
-                      <div class="validate"></div>
-                    </div>
-                    <button type="submit" class=" form-control"><b>Entrar</b></button>
+            <div class="col-lg mt-3 mt-lg-0">
+              <form method="post" role="form" data-aos="fade-on">
+                <div class="form-row mt-4 pt-3">
+                  <div class="col-md-6 form-group">
+                    <input type="text" name="nome_log" class="form-control" id="nome_log" placeholder="Nome de acesso"
+                      data-rule="minlen:4" data-msg="Entre com seu login" />
+                    <div class="validate"></div>
                   </div>
+                  <div class="col-md-6 form-group">
+                    <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha"
+                      data-rule="email" data-msg="insira sua senha" />
+                    <div class="validate"></div>
+                  </div>
+                  <button type="submit" class=" form-control"><b>Entrar</b></button>
+                </div>
 
-                  {% csrf_token %}
+                {% csrf_token %}
 
-                </form>
-              </div>
+              </form>
+            </div>
 
             {% endif %}
           </div>
@@ -215,7 +231,7 @@ src="https://www.facebook.com/tr?id=936242826568810&ev=PageView&noscript=1"
       </div>
     </div>
   </header>
-  <section >
+  <section>
     {% block conteudo%}
 
     {% endblock %}

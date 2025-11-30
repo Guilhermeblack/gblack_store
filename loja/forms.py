@@ -1,35 +1,41 @@
 from django import forms
-from django.contrib.auth import get_user
+from django.contrib.auth import get_user_model
 from . import models
 from cloudinary.models import CloudinaryField
 
-class autForm(forms.ModelForm):
+User = get_user_model()
 
-    class Meta:
-        model= models.Cliente
-        fields = ['nome_log', 'senha']
-        name= 'logform'
+class autForm(forms.Form):
+    nome_log = forms.CharField(label="Email")
     senha = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'senha'}))
-    nome_log = forms.CharField()
 
-#
 class cria_usr(forms.ModelForm):
+    senha = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'senha'}))
+    senha_rep = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'repetir senha'}))
+    nome = forms.CharField(label="Nome Completo") # We will save this to first_name
 
     class Meta:
         model = models.Cliente
-        fields = ['cpf', 'email', 'nome', 'senha','senha_rep', 'telefone']
-        # name= 'cria_usr'
-    nome = forms.CharField()
-    cpf = forms.CharField()
-    telefone = forms.CharField()
-    # loja = forms.BooleanField()
-    senha = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'senha'}))
-    senha_rep = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'repetir senha'}))
-    email = forms.CharField()
-# #
-# #
-class produtoform(forms.ModelForm):
+        fields = ['cpf', 'email', 'telefone']
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['email'] # Use email as username
+        user.first_name = self.cleaned_data['nome']
+        user.set_password(self.cleaned_data['senha'])
+        if commit:
+            user.save()
+        return user
 
+    def clean(self):
+        cleaned_data = super().clean()
+        senha = cleaned_data.get("senha")
+        senha_rep = cleaned_data.get("senha_rep")
+
+        if senha and senha_rep and senha != senha_rep:
+            self.add_error('senha_rep', "As senhas não conferem")
+
+class produtoform(forms.ModelForm):
     class Meta:
         model = models.Produto
         fields = ['descricao','img_prod','nome','preco','tipo','estoque']
@@ -39,18 +45,3 @@ class produtoform(forms.ModelForm):
     # preco = forms.CharField()
     img_prod = CloudinaryField()
     tipo = forms.ChoiceField(choices=models.Produto.STATUS_CHOICES)
-
-#
-#
-# class carrinho(forms.ModelForm):
-#
-#     class Meta:
-#         model = models.Carrinho
-#         fields = 'cliente_cli','valor'
-#         name= 'logform'
-
-#
-#     def __init__(self, *args, **kwargs):
-#         super(pedidos, self).__init__(*args, **kwargs)
-#         self.fields['produtosPed'].label =''
-

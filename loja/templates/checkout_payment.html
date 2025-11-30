@@ -1,0 +1,126 @@
+{% extends "blocks/base.html" %}
+{% load static %}
+{% block conteudo %}
+
+<section id="payment" class="section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>Pagamento</h2>
+            <p>Escolha a forma de pagamento.</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Método de Pagamento</h4>
+                        <form id="payment-form">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="pix" value="PIX"
+                                    checked>
+                                <label class="form-check-label" for="pix">
+                                    <strong>PIX</strong> (Aprovação Imediata)
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="card"
+                                    value="CARD">
+                                <label class="form-check-label" for="card">
+                                    <strong>Cartão de Crédito</strong>
+                                </label>
+                                <div id="card-details" class="mt-2" style="display:none;">
+                                    <input type="text" class="form-control mb-2" placeholder="Número do Cartão">
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <input type="text" class="form-control" placeholder="MM/AA">
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" class="form-control" placeholder="CVV">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="boleto"
+                                    value="BOLETO">
+                                <label class="form-check-label" for="boleto">
+                                    <strong>Boleto Bancário</strong>
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Resumo do Pedido</h4>
+                        <ul class="list-group list-group-flush">
+                            {% for item in carrinho.items.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ item.produto.nome }} (x{{ item.quantidade }})
+                                <span>R$ {{ item.get_subtotal }}</span>
+                            </li>
+                            {% endfor %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>Total</strong>
+                                <strong>R$ {{ total }}</strong>
+                            </li>
+                        </ul>
+                        <button id="pay-button" class="btn btn-success btn-block mt-3">Finalizar Compra</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll('input[name="paymentMethod"]').forEach((elem) => {
+        elem.addEventListener("change", function (event) {
+            var cardDetails = document.getElementById("card-details");
+            if (event.target.value === "CARD") {
+                cardDetails.style.display = "block";
+            } else {
+                cardDetails.style.display = "none";
+            }
+        });
+    });
+
+    document.getElementById('pay-button').addEventListener('click', function () {
+        var method = document.querySelector('input[name="paymentMethod"]:checked').value;
+        var btn = this;
+        btn.disabled = true;
+        btn.innerHTML = 'Processando...';
+
+        fetch("{% url 'process_payment' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ method: method })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('Erro no pagamento: ' + data.message);
+                    btn.disabled = false;
+                    btn.innerHTML = 'Finalizar Compra';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Erro ao processar pagamento.');
+                btn.disabled = false;
+                btn.innerHTML = 'Finalizar Compra';
+            });
+    });
+</script>
+
+{% endblock %}
