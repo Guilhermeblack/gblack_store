@@ -68,7 +68,25 @@ class Produto(models.Model):
         null=False
     )
     estoque = models.IntegerField(validators=[MinValueValidator(0)])
+    is_available = models.BooleanField(default=True, verbose_name="Disponível")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def get_current_price(self):
+        """Retorna o preço atual considerando descontos ativos"""
+        from django.utils import timezone
+        now = timezone.now()
+        
+        # Busca desconto ativo
+        active_discount = self.discounts.filter(
+            is_active=True,
+            start_date__lte=now,
+            end_date__gte=now
+        ).first()
+        
+        if active_discount:
+            discount_amount = self.preco * (active_discount.discount_percent / 100)
+            return self.preco - discount_amount
+        return self.preco
 
     def __str__(self):
         return self.nome
@@ -94,7 +112,7 @@ class CartItem(models.Model):
     quantidade = models.PositiveIntegerField(default=1)
     
     def get_subtotal(self):
-        return self.produto.preco * self.quantidade
+        return self.produto.get_current_price() * self.quantidade
 
     def __str__(self):
         return f"{self.quantidade}x {self.produto.nome}"
@@ -165,3 +183,62 @@ class Leads(models.Model):
     nome = models.CharField(max_length=20, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+class FeedPost(models.Model):
+    """Posts do feed para orientações e novidades sobre produtos"""
+    title = models.CharField(max_length=200, verbose_name="Título")
+    content = models.TextField(verbose_name="Conteúdo")
+    image = CloudinaryField('image', blank=True, null=True)
+    scheduled_date = models.DateTimeField(verbose_name="Data de Publicação")
+    is_published = models.BooleanField(default=False, verbose_name="Publicado")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-scheduled_date']
+        verbose_name = "Post do Feed"
+        verbose_name_plural = "Posts do Feed"
+    
+    def __str__(self):
+        return self.title
+    
+    def save(self, *args, **kwargs):
+        """Auto-publica posts cuja data de agendamento já passou"""
+        from django.utils import timezone
+        if self.scheduled_date <= timezone.now():
+            self.is_published = True
+        super().save(*args, **kwargs)
+
+
+class ProductDiscount(models.Model):
+    """Descontos programados para produtos"""
+    produto = models.ForeignKey(
+        Produto, 
+        on_delete=models.CASCADE, 
+        related_name='discounts',
+        verbose_name="Produto"
+    )
+    discount_percent = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        verbose_name="Desconto (%)"
+    )
+    start_date = models.DateTimeField(verbose_name="Data de Início")
+    end_date = models.DateTimeField(verbose_name="Data de Término")
+    is_active = models.BooleanField(default=True, verbose_name="Ativo")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-start_date']
+        verbose_name = "Desconto de Produto"
+        verbose_name_plural = "Descontos de Produtos"
+    
+    def __str__(self):
+        return f"{self.produto.nome} - {self.discount_percent}% ({self.start_date.strftime('%d/%m/%Y')} - {self.end_date.strftime('%d/%m/%Y')})"
+    
+    def is_currently_active(self):
+        """Verifica se o desconto está ativo no momento"""
+        from django.utils import timezone
+        now = timezone.now()
+        return self.is_active and self.start_date <= now <= self.end_date

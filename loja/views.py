@@ -75,7 +75,8 @@ def index(request):
             models.Carrinho.objects.create(cliente=request.user)
             pedido = []
 
-    produtos = models.Produto.objects.all().order_by('tipo')
+    # Filtra apenas produtos disponíveis
+    produtos = models.Produto.objects.filter(is_available=True).order_by('tipo')
 
     return render(request, 'index.html', {
         'criar': forms.cria_usr(),

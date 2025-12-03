@@ -20,15 +20,19 @@ class SalesFlowTests(TestCase):
         User = get_user_model()
         # Create User
         self.user = User.objects.create_user(
-            username='test@example.com',
+            username='testuser',
             email='test@example.com',
             password='password123',
             first_name='Test',
             last_name='User',
             cpf='12345678901'
         )
+        # Create cart for user
+        self.carrinho = Carrinho.objects.create(cliente=self.user)
+        
         self.client = Client()
-        self.client.login(email='test@example.com', password='password123')
+        # Login using username, not email
+        self.client.login(username='testuser', password='password123')
 
         # Create Product
         self.product = Produto.objects.create(
@@ -53,9 +57,8 @@ class SalesFlowTests(TestCase):
 
     def test_checkout_cart_view(self):
         from loja.models import Carrinho, CartItem
-        # Add item first
-        carrinho = Carrinho.objects.create(cliente=self.user)
-        CartItem.objects.create(carrinho=carrinho, produto=self.product, quantidade=2)
+        # Add item to existing cart
+        CartItem.objects.create(carrinho=self.carrinho, produto=self.product, quantidade=2)
         
         response = self.client.get(reverse('checkout_cart'))
         self.assertEqual(response.status_code, 200)
@@ -77,9 +80,9 @@ class SalesFlowTests(TestCase):
 
     def test_process_payment_and_order_creation(self):
         from loja.models import Carrinho, CartItem, Address, Venda
+        import json
         # Setup Cart and Address
-        carrinho = Carrinho.objects.create(cliente=self.user)
-        CartItem.objects.create(carrinho=carrinho, produto=self.product, quantidade=1)
+        CartItem.objects.create(carrinho=self.carrinho, produto=self.product, quantidade=1)
         address = Address.objects.create(
             cliente=self.user, street='Rua Teste', number='123',
             neighborhood='Bairro', city='Cidade', state='SP', zip_code='12345'
@@ -90,7 +93,7 @@ class SalesFlowTests(TestCase):
         
         response = self.client.post(reverse('process_payment'), 
                                     content_type='application/json',
-                                    data={'method': 'PIX'})
+                                    data=json.dumps({'method': 'PIX'}))
         
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.json()['success'])
@@ -107,5 +110,5 @@ class SalesFlowTests(TestCase):
         self.assertEqual(self.product.estoque, 9)
         
         # Verify Cart Empty
-        self.assertEqual(carrinho.items.count(), 0)
+        self.assertEqual(self.carrinho.items.count(), 0)
 

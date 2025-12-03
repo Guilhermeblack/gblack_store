@@ -1,8 +1,8 @@
-{% load pwa %}
+{# {% load pwa %} #}
 
 <head>
   {% load static %}
-  {% progressive_web_app_meta %}
+  {# {% progressive_web_app_meta %} #}
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -41,7 +41,7 @@
     !function (f, b, e, v, n, t, s) {
       if (f.fbq) return; n = f.fbq = function () {
         n.callMethod ?
-        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
       };
       if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
       n.queue = []; t = b.createElement(e); t.async = !0;
@@ -88,22 +88,7 @@
           <!--          <li class="active"><a href="#sobre" class="scrollto">Gblack</a></li>-->
           {% if 'conta' in request.path %}
           <li class=""><a href="{% url 'index' %}">Produtos</a>
-            {% else %}
-          <li class="drop-down"><a href="#">Produtos</a>
-            <ul>
-              <li><a href="  #produtos">Todos</a></li>
-
-
-
-              {% for p in produtos %}
-              {% ifchanged p.tipo %}<li><a href="#produtos" data-filter=".{{tp.tipo}}">{{p.get_tipo_display}}</a></li>{%
-              endifchanged %}
-              {% endfor %}
-
-            </ul>
-          </li>
-          {% endif %}
-
+            {% endif %}
 
 
           <li class="nav-logo"> <i class="icon aling-content- end mt-0"></i> <a href="{% url 'index' %}"><img

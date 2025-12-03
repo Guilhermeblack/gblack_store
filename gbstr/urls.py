@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django.contrib import admin
-from loja import views, checkout_views
+from loja import views, checkout_views, feed_views
 
 from django.conf import urls, settings
 from . import settings
@@ -24,6 +24,10 @@ urlpatterns = [
     path('checkout/payment/', checkout_views.checkout_payment, name='checkout_payment'),
     path('checkout/process/', checkout_views.process_payment, name='process_payment'),
     path('checkout/success/', checkout_views.checkout_success, name='checkout_success'),
+    
+    # Feed Routes
+    path('feed/', feed_views.feed_list, name='feed_list'),
+    path('feed/<int:pk>/', feed_views.feed_detail, name='feed_detail'),
 
     # path('checkout/', include('django_pagarme.urls'))
 

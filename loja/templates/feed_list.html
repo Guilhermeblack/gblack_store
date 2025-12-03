@@ -1,0 +1,54 @@
+{% extends "blocks/base.html" %}
+{% load static %}
+
+{% block conteudo %}
+<section id="feed" class="section-bg" style="padding: 60px 0;">
+    <div class="container">
+
+        <div class="section-title" data-aos="fade-up">
+            <h2>Feed de Orientações</h2>
+            <p>Dicas, novidades e orientações sobre nossos produtos</p>
+        </div>
+
+        <div class="row" data-aos="fade-up" data-aos-delay="100">
+            {% if posts %}
+            {% for post in posts %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}"
+                        style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                        style="height: 200px;">
+                        <i class="icofont-image" style="font-size: 48px; color: #fff;"></i>
+                    </div>
+                    {% endif %}
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text text-muted small">
+                            <i class="icofont-calendar"></i> {{ post.scheduled_date|date:"d/m/Y H:i" }}
+                        </p>
+                        <p class="card-text">
+                            {{ post.content|truncatewords:20 }}
+                        </p>
+                        <a href="{% url 'feed_detail' post.pk %}" class="btn btn-primary mt-auto">
+                            Ler mais <i class="icofont-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center" role="alert">
+                    <i class="icofont-info-circle"></i> Nenhum post disponível no momento.
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+{% endblock %}

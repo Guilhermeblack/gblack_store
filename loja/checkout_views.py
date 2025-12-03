@@ -102,11 +102,21 @@ def process_payment(request):
             
             # 2. Move items from Cart to ItemVenda
             for item in carrinho.items.all():
+                # Valida disponibilidade do produto
+                if not item.produto.is_available:
+                    return JsonResponse({
+                        'success': False, 
+                        'message': f'Produto {item.produto.nome} não está mais disponível'
+                    })
+                
+                # Usa preço com desconto se houver
+                preco_atual = item.produto.get_current_price()
+                
                 models.ItemVenda.objects.create(
                     venda=venda,
                     produto=item.produto,
                     produto_nome=item.produto.nome,
-                    preco_unitario=item.produto.preco,
+                    preco_unitario=preco_atual,
                     quantidade=item.quantidade
                 )
                 # Decrement stock
