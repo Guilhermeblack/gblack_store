@@ -29,6 +29,9 @@ urlpatterns = [
     path('feed/', feed_views.feed_list, name='feed_list'),
     path('feed/<int:pk>/', feed_views.feed_detail, name='feed_detail'),
 
+    # API Routes
+    path('api/v1/', include('loja.urls')),
+
     # path('checkout/', include('django_pagarme.urls'))
 
     ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

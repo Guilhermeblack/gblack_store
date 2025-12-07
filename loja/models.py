@@ -54,7 +54,7 @@ class Produto(models.Model):
     nome = models.CharField(max_length=100, null=False, blank=False)
     descricao = models.TextField(null=True, blank=True)
     preco = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    img_prod = CloudinaryField('image')
+    img_prod = CloudinaryField('image', blank=True, null=True)
     
     STATUS_CHOICES = (
         ("R", "Relogio"),

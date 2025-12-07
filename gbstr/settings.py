@@ -28,13 +28,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'jz91+(t=#6sdlnsykv)b*f#op@-qv1j22=x-xg)hc$q7_8kurc'
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('SECRET_KEY', 'jz91+(t=#6sdlnsykv)b*f#op@-qv1j22=x-xg)hc$q7_8kurc')
 
 #
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+#
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Application definition
 
@@ -50,6 +55,9 @@ INSTALLED_APPS = [
     'gbstr',
     'loja',
     'cloudinary',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
     # 'django_pagarme',
     # 'django-heroku'
 ]
@@ -69,6 +77,7 @@ MIDDLEWARE_CLASSES = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -145,6 +154,16 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+}
+
 # django_heroku.settings(locals())
 
 # Internationalization
@@ -204,14 +223,14 @@ PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'pt-BR'
 
 cloudinary.config(
-    cloud_name="gblack",
-    api_key="191418815964556",
-    api_secret="hvTxhjD4ZyfYigVrte6ucol0lio"
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME', "gblack"),
+    api_key=os.environ.get('CLOUDINARY_API_KEY', "191418815964556"),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET', "hvTxhjD4ZyfYigVrte6ucol0lio")
 )
 
 # GERENCIANET
-CLIENT_ID_GBLACK = 'Client_Id_ce88682777180d6ba912e693e0c4be5296d08395'
-CLIENT_SECRET_GBLACK = 'Client_Secret_f1394fc97a9f02df1efb12478575dbc861e03ca5'
+CLIENT_ID_GBLACK = os.environ.get('CLIENT_ID_GBLACK', 'Client_Id_ce88682777180d6ba912e693e0c4be5296d08395')
+CLIENT_SECRET_GBLACK = os.environ.get('CLIENT_SECRET_GBLACK', 'Client_Secret_f1394fc97a9f02df1efb12478575dbc861e03ca5')
 URL_GBLACK = 'https://pix-h.api.efipay.com.br'
 
 
@@ -219,15 +238,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'gblacklojaonline@gmail.com'
-EMAIL_HOST_PASSWORD = 'glm14407486'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'gblacklojaonline@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'glm14407486')
 
 #twilio
 # recover  EC31ZN3FWAFK6E9PDT4FJFPA
 
-TWILIO_ACCOUNT_SID = 'AC3ae32d970db7bc31f1abdb686754e712'
-TWILIO_AUTH_TOKEN = '4517d120b1d596043c54d78acda11c82'
-TWILIO_PHONE_NUMBER = '+5516994288243'
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', 'AC3ae32d970db7bc31f1abdb686754e712')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '4517d120b1d596043c54d78acda11c82')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '+5516994288243')
 
 
 # Dados para integração com Pagarme
