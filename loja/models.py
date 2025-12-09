@@ -91,12 +91,36 @@ class Produto(models.Model):
     def __str__(self):
         return self.nome
 
+class StoreConfig(models.Model):
+    """Configurações gerais da loja"""
+    cart_expiration_days = models.PositiveIntegerField(
+        default=3,
+        verbose_name="Dias para expiração do carrinho",
+        help_text="Número de dias que um item fica reservado no carrinho antes de voltar ao estoque."
+    )
+    
+    class Meta:
+        verbose_name = "Configuração da Loja"
+        verbose_name_plural = "Configurações da Loja"
+
+    def save(self, *args, **kwargs):
+        if not self.pk and StoreConfig.objects.exists():
+            # Force singleton
+            return
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return "Configuração da Loja"
+
 class Carrinho(models.Model):
     cliente = models.OneToOneField(
         Cliente,
         on_delete=models.CASCADE,
-        related_name="carrinho"
+        related_name="carrinho",
+        null=True,
+        blank=True
     )
+    session_id = models.CharField(max_length=100, null=True, blank=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -104,7 +128,9 @@ class Carrinho(models.Model):
         return sum(item.get_subtotal() for item in self.items.all())
         
     def __str__(self):
-        return f"Carrinho de {self.cliente.username}"
+        if self.cliente:
+            return f"Carrinho de {self.cliente.username}"
+        return f"Carrinho Visitante {self.session_id}"
 
 class CartItem(models.Model):
     carrinho = models.ForeignKey(Carrinho, on_delete=models.CASCADE, related_name="items")
@@ -189,6 +215,12 @@ class FeedPost(models.Model):
     title = models.CharField(max_length=200, verbose_name="Título")
     content = models.TextField(verbose_name="Conteúdo")
     image = CloudinaryField('image', blank=True, null=True)
+    products = models.ManyToManyField(
+        'Produto',
+        blank=True,
+        related_name='feed_posts',
+        verbose_name="Produtos Vinculados"
+    )
     scheduled_date = models.DateTimeField(verbose_name="Data de Publicação")
     is_published = models.BooleanField(default=False, verbose_name="Publicado")
     created_at = models.DateTimeField(auto_now_add=True)

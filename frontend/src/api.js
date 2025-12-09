@@ -14,6 +14,15 @@ api.interceptors.request.use(
         if (token) {
             config.headers.Authorization = `Token ${token}`;
         }
+
+        // Guest ID logic
+        let guestId = localStorage.getItem('guest_id');
+        if (!guestId) {
+            guestId = crypto.randomUUID();
+            localStorage.setItem('guest_id', guestId);
+        }
+        config.headers['X-Guest-ID'] = guestId;
+
         return config;
     },
     (error) => Promise.reject(error)

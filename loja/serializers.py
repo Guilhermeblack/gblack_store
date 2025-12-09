@@ -1,17 +1,22 @@
 from rest_framework import serializers
-from .models import Produto, Carrinho, CartItem, Cliente, Address, Venda, ItemVenda, FeedPost
+from .models import Produto, Carrinho, CartItem, Cliente, Address, Venda, ItemVenda, FeedPost, PaymentTransaction
 
 class FeedPostSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
+    products = serializers.SerializerMethodField()
 
     class Meta:
         model = FeedPost
-        fields = ['id', 'title', 'content', 'image', 'image_url', 'scheduled_date', 'is_published', 'created_at']
+        fields = ['id', 'title', 'content', 'image', 'image_url', 'products', 'scheduled_date', 'is_published', 'created_at']
 
     def get_image_url(self, obj):
         if obj.image:
             return obj.image.url
         return None
+
+    def get_products(self, obj):
+        from .serializers import ProdutoSerializer
+        return ProdutoSerializer(obj.products.all(), many=True).data
 
 class ProdutoSerializer(serializers.ModelSerializer):
     current_price = serializers.DecimalField(source='get_current_price', max_digits=10, decimal_places=2, read_only=True)
@@ -83,3 +88,8 @@ class VendaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Venda
         fields = ['id', 'status', 'total', 'created_at', 'items', 'observacao']
+
+class PaymentTransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentTransaction
+        fields = ['id', 'amount', 'method', 'status', 'transaction_id', 'created_at']

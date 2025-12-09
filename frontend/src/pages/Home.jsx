@@ -42,7 +42,7 @@ const Home = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {products.map((product) => (
                     <div key={product.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group">
-                        <div className="relative aspect-square overflow-hidden bg-gray-100">
+                        <Link to={`/product/${product.id}`} className="relative aspect-square overflow-hidden bg-gray-100 block">
                             {product.img_prod_url ? (
                                 <img
                                     src={product.img_prod_url}
@@ -52,15 +52,15 @@ const Home = () => {
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-gray-400">Sem Imagem</div>
                             )}
-                        </div>
+                        </Link>
                         <div className="p-4">
                             <h3 className="font-semibold text-lg mb-1">{product.nome}</h3>
                             <p className="text-gray-500 text-sm mb-3">{product.tipo === 'R' ? 'Relógio' : product.tipo === 'A' ? 'Acessório' : 'Vestuário'}</p>
                             <div className="flex justify-between items-center">
                                 <span className="font-bold text-lg">R$ {product.preco}</span>
-                                <button className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition">
+                                <Link to={`/product/${product.id}`} className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition">
                                     Ver Detalhes
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>

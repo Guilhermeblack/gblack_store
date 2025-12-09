@@ -24,10 +24,15 @@ class FeedPostAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content')
     list_editable = ('is_published',)
     date_hierarchy = 'scheduled_date'
+    filter_horizontal = ('products',)
     
     fieldsets = (
         ('Conteúdo', {
             'fields': ('title', 'content', 'image')
+        }),
+        ('Produtos Vinculados', {
+            'fields': ('products',),
+            'description': 'Selecione os produtos que deseja vincular a este post para sugestão de compra.'
         }),
         ('Publicação', {
             'fields': ('scheduled_date', 'is_published')

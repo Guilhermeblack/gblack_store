@@ -63,7 +63,9 @@ class SalesFlowTests(TestCase):
         response = self.client.get(reverse('checkout_cart'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Product')
-        self.assertContains(response, '200.00') # 2 * 100
+        self.assertContains(response, 'Test Product')
+        # Check context for total to avoid L10N issues
+        self.assertEqual(response.context['carrinho'].get_total(), Decimal('200.00'))
 
     def test_checkout_address_creation(self):
         from loja.models import Address
@@ -87,6 +89,11 @@ class SalesFlowTests(TestCase):
             cliente=self.user, street='Rua Teste', number='123',
             neighborhood='Bairro', city='Cidade', state='SP', zip_code='12345'
         )
+        
+        # Set session
+        session = self.client.session
+        session['checkout_address_id'] = address.id
+        session.save()
         
         # Store address in session (as my view logic might rely on it or I need to ensure it picks the last one)
         # Actually my view `process_payment` gets the last address: `address = request.user.addresses.last()`

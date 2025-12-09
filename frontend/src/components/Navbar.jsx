@@ -1,10 +1,34 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, User, Menu, LogOut } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
+import api from '../api';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
+  const [cartCount, setCartCount] = useState(0);
+
+  const fetchCartCount = async () => {
+    try {
+      const response = await api.get('cart/');
+      const items = response.data?.items || [];
+      const totalItems = items.reduce((sum, item) => sum + item.quantidade, 0);
+      setCartCount(totalItems);
+    } catch (error) {
+      // Cart might not exist yet, ignore error
+      setCartCount(0);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartCount();
+
+    // Listen for cart updates
+    const handleCartUpdate = () => fetchCartCount();
+    window.addEventListener('cartUpdated', handleCartUpdate);
+
+    return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+  }, [user]);
 
   return (
     <nav className="bg-primary text-white shadow-md">
@@ -22,7 +46,11 @@ const Navbar = () => {
         <div className="flex items-center space-x-4">
           <Link to="/cart" className="relative hover:text-gray-300 transition">
             <ShoppingCart size={24} />
-            {/* <span className="absolute -top-2 -right-2 bg-red-500 text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span> */}
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                {cartCount > 99 ? '99+' : cartCount}
+              </span>
+            )}
           </Link>
 
           {user ? (

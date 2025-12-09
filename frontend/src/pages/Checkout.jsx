@@ -37,26 +37,27 @@ const Checkout = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // First save address
-            await api.post('address/', address);
+            // 1. Save address
+            const addressResponse = await api.post('address/', address);
+            const addressId = addressResponse.data.id;
 
-            // Then process payment (mock)
-            // In a real app, we would call the checkout endpoint
-            // For now, let's assume we have an endpoint or just simulate success
-            // Since I didn't create a specific checkout API endpoint that handles everything in one go in my plan,
-            // I'll assume we might need one or just use the existing Django views logic via API.
-            // But wait, I didn't create a Checkout API View in api_views.py.
-            // I should probably create one or just use a placeholder.
+            // 2. Process checkout
+            const checkoutResponse = await api.post('orders/checkout/', {
+                address_id: addressId,
+                payment_method: paymentMethod
+            });
 
-            // Let's assume I'll add a 'checkout' action to CartViewSet or a separate CheckoutView.
-            // For now, I'll just alert success and redirect.
-
-            alert('Pedido realizado com sucesso!');
-            navigate('/');
+            if (checkoutResponse.data.success) {
+                alert('Pedido realizado com sucesso!');
+                navigate('/'); // Or navigate to a success page / orders page
+            } else {
+                alert('Erro no checkout: ' + (checkoutResponse.data.message || 'Erro desconhecido'));
+            }
 
         } catch (error) {
             console.error('Error processing checkout:', error);
-            alert('Erro ao processar pedido.');
+            const errorMessage = error.response?.data?.error || 'Erro ao processar pedido.';
+            alert(errorMessage);
         }
     };
 
