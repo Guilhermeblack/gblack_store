@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import api_views
+from . import webhook_views
 
 router = DefaultRouter()
 router.register(r'products', api_views.ProdutoViewSet, basename='product')
@@ -15,4 +16,9 @@ from rest_framework.authtoken.views import obtain_auth_token
 urlpatterns = [
     path('', include(router.urls)),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    
+    # Webhooks for external services
+    path('webhooks/payment/', webhook_views.payment_webhook, name='payment_webhook'),
+    path('webhooks/shipping/', webhook_views.shipping_webhook, name='shipping_webhook'),
+    path('webhooks/marketplace/<str:marketplace>/', webhook_views.marketplace_webhook, name='marketplace_webhook'),
 ]

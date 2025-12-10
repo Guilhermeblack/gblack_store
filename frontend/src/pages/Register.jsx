@@ -31,81 +31,72 @@ const Register = () => {
         }
     };
 
+    const inputClass = "w-full px-4 py-3 bg-[#1a1a1a] border border-[#333] text-white placeholder-gray-500 rounded-lg focus:outline-none focus:border-[#d4af37] transition";
+
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                <div className="text-center">
+                    <h1 className="text-3xl font-black text-gradient mb-2">GBLACK</h1>
+                    <h2 className="text-xl text-white">
                         Criar nova conta
                     </h2>
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <input
-                                name="username"
-                                type="text"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-black focus:border-black focus:z-10 sm:text-sm"
-                                placeholder="Usuário"
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div>
-                            <input
-                                name="email"
-                                type="email"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-black focus:border-black focus:z-10 sm:text-sm"
-                                placeholder="Email"
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div>
-                            <input
-                                name="password"
-                                type="password"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-black focus:border-black focus:z-10 sm:text-sm"
-                                placeholder="Senha"
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div>
-                            <input
-                                name="cpf"
-                                type="text"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-black focus:border-black focus:z-10 sm:text-sm"
-                                placeholder="CPF"
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div>
-                            <input
-                                name="telefone"
-                                type="text"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-black focus:border-black focus:z-10 sm:text-sm"
-                                placeholder="Telefone"
-                                onChange={handleChange}
-                            />
-                        </div>
+                <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
+                    <input
+                        name="username"
+                        type="text"
+                        required
+                        className={inputClass}
+                        placeholder="Usuário"
+                        onChange={handleChange}
+                    />
+                    <input
+                        name="email"
+                        type="email"
+                        required
+                        className={inputClass}
+                        placeholder="Email"
+                        onChange={handleChange}
+                    />
+                    <input
+                        name="password"
+                        type="password"
+                        required
+                        className={inputClass}
+                        placeholder="Senha"
+                        onChange={handleChange}
+                    />
+                    <div className="grid grid-cols-2 gap-4">
+                        <input
+                            name="cpf"
+                            type="text"
+                            required
+                            className={inputClass}
+                            placeholder="CPF"
+                            onChange={handleChange}
+                        />
+                        <input
+                            name="telefone"
+                            type="text"
+                            required
+                            className={inputClass}
+                            placeholder="Telefone"
+                            onChange={handleChange}
+                        />
                     </div>
 
                     {error && <div className="text-red-500 text-sm text-center">{error}</div>}
 
-                    <div>
-                        <button
-                            type="submit"
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                        >
-                            Cadastrar
-                        </button>
-                    </div>
+                    <button
+                        type="submit"
+                        className="btn-primary w-full"
+                    >
+                        Cadastrar
+                    </button>
 
                     <div className="text-center">
-                        <Link to="/login" className="text-sm text-blue-600 hover:text-blue-500">
+                        <Link to="/login" className="text-sm text-[#d4af37] hover:underline">
                             Já tem uma conta? Entre
                         </Link>
                     </div>

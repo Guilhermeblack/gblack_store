@@ -2,6 +2,128 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-dark: #0a0a0a;
+  --color-dark-light: #1a1a1a;
+  --color-gold: #d4af37;
+  --color-gold-light: #f0d060;
+  --color-white: #ffffff;
+  --color-gray: #888888;
+}
+
 body {
-  @apply bg-gray-50 text-gray-900;
+  @apply bg-[#0a0a0a] text-white;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 4px;
+}
+
+/* Custom Utility Classes */
+.text-gold {
+  color: #d4af37;
+}
+
+.bg-gold {
+  background-color: #d4af37;
+}
+
+.border-gold {
+  border-color: #d4af37;
+}
+
+.hover\:bg-gold:hover {
+  background-color: #d4af37;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply bg-[#d4af37] text-black font-bold py-3 px-8 rounded-lg transition-all duration-300;
+}
+
+.btn-primary:hover {
+  @apply bg-[#f0d060] scale-105;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn-secondary {
+  @apply border-2 border-[#d4af37] text-[#d4af37] font-bold py-3 px-8 rounded-lg transition-all duration-300 bg-transparent;
+}
+
+.btn-secondary:hover {
+  @apply bg-[#d4af37] text-black;
+}
+
+/* Card Styles */
+.card-dark {
+  @apply bg-[#1a1a1a] rounded-xl overflow-hidden transition-all duration-300;
+}
+
+.card-dark:hover {
+  @apply transform -translate-y-1;
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes pulse-gold {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 20px 5px rgba(212, 175, 55, 0.2);
+  }
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 2s infinite;
+}
+
+/* Badge */
+.badge-urgency {
+  @apply bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide;
+}
+
+/* Text Gradients */
+.text-gradient {
+  background: linear-gradient(135deg, #d4af37 0%, #f0d060 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

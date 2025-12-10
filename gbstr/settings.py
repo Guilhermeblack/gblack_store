@@ -270,3 +270,58 @@ TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '+5516994288243')
 
 # PAYPAL_IDENTITY_TOKEN = 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
 # TKN_PAYPAL = 'e2WYMTODkM8DQeoYvI4ODlA9e2ZaMzNHp5i2O64HTCc6TjZ1Bhz0g2UZdEe'
+
+# =============================================================================
+# EXTERNAL INTEGRATIONS
+# =============================================================================
+
+# Payment Gateway
+# Options: 'mock', 'mercadopago'
+PAYMENT_GATEWAY = os.environ.get('PAYMENT_GATEWAY', 'mock')
+MERCADOPAGO_ACCESS_TOKEN = os.environ.get('MERCADOPAGO_ACCESS_TOKEN', '')
+MERCADOPAGO_PUBLIC_KEY = os.environ.get('MERCADOPAGO_PUBLIC_KEY', '')
+
+# Shipping Provider  
+# Options: 'mock', 'melhorenvio'
+SHIPPING_PROVIDER = os.environ.get('SHIPPING_PROVIDER', 'mock')
+MELHORENVIO_TOKEN = os.environ.get('MELHORENVIO_TOKEN', '')
+MELHORENVIO_SANDBOX = os.environ.get('MELHORENVIO_SANDBOX', 'True') == 'True'
+
+# Invoice Provider (NF-e)
+# Options: 'mock', 'bling', 'tiny'
+INVOICE_PROVIDER = os.environ.get('INVOICE_PROVIDER', 'mock')
+BLING_API_KEY = os.environ.get('BLING_API_KEY', '')
+TINY_API_TOKEN = os.environ.get('TINY_API_TOKEN', '')
+
+# Marketplaces
+ENABLED_MARKETPLACES = os.environ.get('ENABLED_MARKETPLACES', '').split(',') if os.environ.get('ENABLED_MARKETPLACES') else []
+
+# MercadoLivre
+MERCADOLIVRE_ACCESS_TOKEN = os.environ.get('MERCADOLIVRE_ACCESS_TOKEN', '')
+MERCADOLIVRE_USER_ID = os.environ.get('MERCADOLIVRE_USER_ID', '')
+
+# Magazine Luiza
+MAGALU_CLIENT_ID = os.environ.get('MAGALU_CLIENT_ID', '')
+MAGALU_CLIENT_SECRET = os.environ.get('MAGALU_CLIENT_SECRET', '')
+MAGALU_ACCESS_TOKEN = os.environ.get('MAGALU_ACCESS_TOKEN', '')
+
+# Shopee
+SHOPEE_PARTNER_ID = os.environ.get('SHOPEE_PARTNER_ID', '')
+SHOPEE_PARTNER_KEY = os.environ.get('SHOPEE_PARTNER_KEY', '')
+SHOPEE_SHOP_ID = os.environ.get('SHOPEE_SHOP_ID', '')
+SHOPEE_ACCESS_TOKEN = os.environ.get('SHOPEE_ACCESS_TOKEN', '')
+
+# Store Settings (for shipping)
+STORE_ZIP_CODE = os.environ.get('STORE_ZIP_CODE', '01310100')  # CEP da loja
+STORE_ADDRESS = {
+    'name': os.environ.get('STORE_NAME', 'GBlack Store'),
+    'phone': os.environ.get('STORE_PHONE', ''),
+    'email': os.environ.get('STORE_EMAIL', 'contato@gblack.com.br'),
+    'document': os.environ.get('STORE_CNPJ', ''),
+    'address': os.environ.get('STORE_ADDRESS', ''),
+    'number': os.environ.get('STORE_NUMBER', ''),
+    'neighborhood': os.environ.get('STORE_NEIGHBORHOOD', ''),
+    'city': os.environ.get('STORE_CITY', 'São Paulo'),
+    'state': os.environ.get('STORE_STATE', 'SP'),
+    'postal_code': os.environ.get('STORE_ZIP_CODE', '01310100'),
+}

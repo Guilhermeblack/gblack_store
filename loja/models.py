@@ -98,6 +98,20 @@ class StoreConfig(models.Model):
         verbose_name="Dias para expiração do carrinho",
         help_text="Número de dias que um item fica reservado no carrinho antes de voltar ao estoque."
     )
+    free_shipping_threshold = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=300.00,
+        verbose_name="Valor mínimo para frete grátis",
+        help_text="Compras acima deste valor têm frete grátis. Use 0 para desativar."
+    )
+    fixed_shipping_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=15.00,
+        verbose_name="Valor fixo do frete",
+        help_text="Valor cobrado quando não atinge o mínimo para frete grátis."
+    )
     
     class Meta:
         verbose_name = "Configuração da Loja"
@@ -108,6 +122,12 @@ class StoreConfig(models.Model):
             # Force singleton
             return
         super().save(*args, **kwargs)
+
+    @classmethod
+    def get_config(cls):
+        """Retorna a configuração da loja (cria se não existir)"""
+        config, _ = cls.objects.get_or_create(pk=1)
+        return config
 
     def __str__(self):
         return "Configuração da Loja"

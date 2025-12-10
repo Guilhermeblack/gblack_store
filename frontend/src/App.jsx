@@ -24,9 +24,9 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
           <Navbar />
-          <main className="flex-grow bg-gray-50">
+          <main className="flex-grow pt-16">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
@@ -49,8 +49,14 @@ function App() {
               </Route>
             </Routes>
           </main>
-          <footer className="bg-gray-900 text-white py-8 text-center">
-            <p>&copy; {new Date().getFullYear()} GBlack Store. Todos os direitos reservados.</p>
+          <footer className="bg-[#0a0a0a] border-t border-[#1a1a1a] py-12">
+            <div className="container mx-auto px-4">
+              <div className="text-center">
+                <p className="text-2xl font-black text-gradient mb-4">GBLACK</p>
+                <p className="text-gray-500 mb-4">Estilo que impõe respeito</p>
+                <p className="text-gray-600 text-sm">&copy; {new Date().getFullYear()} GBlack Store. Todos os direitos reservados.</p>
+              </div>
+            </div>
           </footer>
         </div>
       </Router>

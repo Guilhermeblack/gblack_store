@@ -276,13 +276,39 @@ class VendaViewSet(viewsets.ReadOnlyModelViewSet):
                     item.produto.estoque -= item.quantidade
                     item.produto.save()
                 
-                # 3. Create PaymentTransaction
+                # 3. Create PaymentTransaction using service
+                from .services import get_payment_service
+                from decimal import Decimal
+                
+                payment_service = get_payment_service()
+                pix_data = None
+                
+                if payment_method == 'PIX':
+                    pix_response = payment_service.create_pix(
+                        order_id=venda.id,
+                        amount=Decimal(str(venda.total)),
+                        customer_email=request.user.email,
+                        description=f'Pedido #{venda.id} - GBlack Store'
+                    )
+                    pix_data = {
+                        'qr_code': pix_response.qr_code,
+                        'qr_code_text': pix_response.qr_code_text,
+                        'expires_at': pix_response.expires_at.isoformat() if pix_response.expires_at else None
+                    }
+                    transaction_id = pix_response.transaction_id
+                    payment_status = 'PENDING'
+                    venda.status = 'PENDING'
+                    venda.save()
+                else:
+                    transaction_id = f'CARD-{venda.id}-123456'
+                    payment_status = 'APPROVED'
+                
                 PaymentTransaction.objects.create(
                     venda=venda,
                     amount=venda.total,
                     method=payment_method,
-                    status='APPROVED',
-                    transaction_id=f'SIM-{venda.id}-123456'
+                    status=payment_status,
+                    transaction_id=transaction_id
                 )
                 
                 # 4. Clear Cart
@@ -291,8 +317,71 @@ class VendaViewSet(viewsets.ReadOnlyModelViewSet):
                 return Response({
                     'success': True,
                     'venda_id': venda.id,
-                    'message': 'Pedido realizado com sucesso!'
+                    'message': 'Pedido realizado com sucesso!',
+                    'pix_data': pix_data
                 })
                 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['post'])
+    def calculate_shipping(self, request):
+        """
+        Calcula opções de frete baseado no CEP e itens do carrinho.
+        Retorna frete grátis se acima do threshold configurado.
+        """
+        zip_code = request.data.get('zip_code')
+        
+        if not zip_code:
+            return Response({'error': 'CEP não fornecido'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Get cart
+        try:
+            carrinho = Carrinho.objects.get(cliente=request.user)
+        except Carrinho.DoesNotExist:
+            return Response({'error': 'Carrinho não encontrado'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not carrinho.items.exists():
+            return Response({'error': 'Carrinho vazio'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        cart_total = carrinho.get_total()
+        
+        # Get store config for free shipping
+        from .models import StoreConfig
+        config = StoreConfig.get_config()
+        
+        # Check if eligible for free shipping
+        free_shipping_eligible = (
+            config.free_shipping_threshold > 0 and 
+            cart_total >= config.free_shipping_threshold
+        )
+        
+        shipping_options = []
+        
+        if free_shipping_eligible:
+            shipping_options.append({
+                'code': 'free',
+                'name': 'Frete Grátis',
+                'price': '0.00',
+                'delivery_days': 7,
+                'is_free': True
+            })
+        else:
+            # Fixed shipping price
+            shipping_options.append({
+                'code': 'standard',
+                'name': 'Entrega Padrão',
+                'price': str(config.fixed_shipping_price),
+                'delivery_days': 7,
+                'is_free': False
+            })
+            
+            # Show how much more for free shipping
+            remaining = config.free_shipping_threshold - cart_total
+            shipping_options[0]['free_shipping_message'] = f'Faltam R$ {remaining:.2f} para frete grátis'
+        
+        return Response({
+            'options': shipping_options,
+            'cart_total': str(cart_total),
+            'free_shipping_threshold': str(config.free_shipping_threshold)
+        })

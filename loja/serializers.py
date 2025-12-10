@@ -50,7 +50,8 @@ class CarrinhoSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = '__all__'
+        fields = ['id', 'street', 'number', 'complement', 'neighborhood', 'city', 'state', 'zip_code', 'cliente']
+        read_only_fields = ['cliente']
 
 class ClienteSerializer(serializers.ModelSerializer):
     addresses = AddressSerializer(many=True, read_only=True)

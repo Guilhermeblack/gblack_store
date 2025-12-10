@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../api';
-import { ShoppingCart, ArrowLeft, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, X, ChevronLeft, ChevronRight, Check, AlertCircle } from 'lucide-react';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -11,6 +11,7 @@ const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
     const [showCarousel, setShowCarousel] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [toast, setToast] = useState(null); // { type: 'success' | 'error', message: string }
 
     // For demo purposes, we'll simulate multiple images
     const getProductImages = () => {
@@ -19,28 +20,33 @@ const ProductDetail = () => {
         return product.img_prod_url ? [product.img_prod_url] : [];
     };
 
-    useEffect(() => {
-        const fetchProduct = async () => {
+    const fetchProduct = async () => {
+        try {
+            const response = await api.get(`products/${id}/`);
+            setProduct(response.data);
+
+            // Fetch related products
             try {
-                const response = await api.get(`products/${id}/`);
-                setProduct(response.data);
-
-                // Fetch related products
-                try {
-                    const relatedResponse = await api.get(`products/${id}/related/`);
-                    setRelatedProducts(relatedResponse.data);
-                } catch (e) {
-                    console.error('Error fetching related products:', e);
-                }
-            } catch (error) {
-                console.error('Error fetching product:', error);
-            } finally {
-                setLoading(false);
+                const relatedResponse = await api.get(`products/${id}/related/`);
+                setRelatedProducts(relatedResponse.data);
+            } catch (e) {
+                console.error('Error fetching related products:', e);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching product:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchProduct();
     }, [id]);
+
+    const showToast = (type, message) => {
+        setToast({ type, message });
+        setTimeout(() => setToast(null), 3000);
+    };
 
     const addToCart = async () => {
         try {
@@ -48,21 +54,33 @@ const ProductDetail = () => {
                 product_id: product.id,
                 quantity: quantity
             });
-            alert('Produto adicionado ao carrinho! Seu item está reservado.');
+            showToast('success', 'Produto adicionado ao carrinho!');
             window.dispatchEvent(new Event('cartUpdated'));
+            // Refresh product data to update stock
+            fetchProduct();
+            setQuantity(1);
         } catch (error) {
             console.error('Error adding to cart:', error);
-            alert(error.response?.data?.error || 'Erro ao adicionar ao carrinho.');
+            showToast('error', error.response?.data?.error || 'Erro ao adicionar ao carrinho.');
         }
     };
 
     const images = getProductImages();
 
-    if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
-    if (!product) return <div className="text-center py-20">Produto não encontrado</div>;
+    if (loading) return <div className="flex justify-center items-center h-screen bg-[#0a0a0a]"><div className="animate-pulse text-[#d4af37]">Carregando...</div></div>;
+    if (!product) return <div className="text-center py-20 bg-[#0a0a0a] text-white">Produto não encontrado</div>;
 
     return (
         <>
+            {/* Toast Notification */}
+            {toast && (
+                <div className={`fixed top-20 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-pulse ${toast.type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                    }`}>
+                    {toast.type === 'success' ? <Check size={20} /> : <AlertCircle size={20} />}
+                    {toast.message}
+                </div>
+            )}
+
             {/* Carousel Modal */}
             {showCarousel && images.length > 0 && (
                 <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
@@ -120,100 +138,108 @@ const ProductDetail = () => {
                 </div>
             )}
 
-            <div className="container mx-auto px-4 py-8 pb-24">
-                <Link to="/" className="inline-flex items-center text-gray-600 hover:text-black mb-8">
-                    <ArrowLeft size={20} className="mr-2" /> Voltar
-                </Link>
+            <div className="bg-[#0a0a0a] min-h-screen pb-28">
+                <div className="container mx-auto px-4 py-8">
+                    <Link to="/products" className="inline-flex items-center text-gray-400 hover:text-[#d4af37] mb-8 transition">
+                        <ArrowLeft size={20} className="mr-2" /> Voltar para Produtos
+                    </Link>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <div
-                        className="bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer hover:shadow-lg transition"
-                        onClick={() => images.length > 0 && setShowCarousel(true)}
-                    >
-                        {product.img_prod_url ? (
-                            <img src={product.img_prod_url} alt={product.nome} className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="w-full h-96 flex items-center justify-center bg-gray-100 text-gray-400">Sem Imagem</div>
-                        )}
-                        {images.length > 0 && (
-                            <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                                Clique para ampliar
-                            </div>
-                        )}
-                    </div>
-
-                    <div>
-                        <h1 className="text-4xl font-bold mb-4">{product.nome}</h1>
-                        <p className="text-3xl font-semibold text-green-600 mb-6">R$ {product.preco}</p>
-
-                        <div className="prose text-gray-600 mb-8">
-                            <p>{product.descricao || 'Produto de alta qualidade da coleção GBlack.'}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div
+                            className="card-dark cursor-pointer hover:scale-[1.02] transition-transform"
+                            onClick={() => images.length > 0 && setShowCarousel(true)}
+                        >
+                            {product.img_prod_url ? (
+                                <img src={product.img_prod_url} alt={product.nome} className="w-full aspect-square object-cover" />
+                            ) : (
+                                <div className="w-full aspect-square flex items-center justify-center bg-[#1a1a1a] text-gray-500">Sem Imagem</div>
+                            )}
                         </div>
 
-                        <div className="flex items-center space-x-4 mb-8">
-                            <div className="flex items-center border rounded-lg">
-                                <button
-                                    className="px-4 py-2 hover:bg-gray-100"
-                                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                >-</button>
-                                <span className="px-4 font-medium">{quantity}</span>
-                                <button
-                                    className="px-4 py-2 hover:bg-gray-100"
-                                    onClick={() => setQuantity(quantity + 1)}
-                                >+</button>
+                        <div>
+                            <span className="text-[#d4af37] text-sm font-semibold uppercase tracking-wider">
+                                {product.tipo === 'R' ? 'Relógio' : product.tipo === 'A' ? 'Acessório' : 'Vestuário'}
+                            </span>
+                            <h1 className="text-4xl font-black text-white mb-4 mt-2">{product.nome}</h1>
+
+                            {product.estoque <= 5 && product.estoque > 0 && (
+                                <span className="badge-urgency mb-4 inline-block">🔥 Últimas {product.estoque} unidades!</span>
+                            )}
+
+                            <p className="text-4xl font-black text-gradient mb-6">R$ {product.current_price || product.preco}</p>
+
+                            <div className="text-gray-400 mb-8">
+                                <p>{product.descricao || 'Peça exclusiva da coleção GBlack. Design premium e acabamento impecável.'}</p>
                             </div>
 
-                            <button
-                                onClick={addToCart}
-                                className="flex-1 bg-black text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition flex items-center justify-center"
-                            >
-                                <ShoppingCart size={20} className="mr-2" />
-                                Adicionar ao Carrinho
-                            </button>
-                        </div>
+                            <div className="flex items-center space-x-4 mb-8">
+                                <div className="flex items-center border border-[#333] rounded-lg bg-[#1a1a1a]">
+                                    <button
+                                        className="px-4 py-3 hover:bg-[#333] text-white transition"
+                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                    >-</button>
+                                    <span className="px-6 font-bold text-white">{quantity}</span>
+                                    <button
+                                        className="px-4 py-3 hover:bg-[#333] text-white transition"
+                                        onClick={() => setQuantity(quantity + 1)}
+                                    >+</button>
+                                </div>
 
-                        <div className="border-t pt-6 text-sm text-gray-500">
-                            <p>Categoria: {product.tipo === 'R' ? 'Relógio' : product.tipo === 'A' ? 'Acessório' : 'Vestuário'}</p>
-                            <p>Estoque: {product.estoque > 0 ? `${product.estoque} unidades disponíveis` : <span className="text-red-500">Esgotado</span>}</p>
+                                <button
+                                    onClick={addToCart}
+                                    disabled={product.estoque === 0}
+                                    className="flex-1 btn-primary py-4 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <ShoppingCart size={20} className="mr-2" />
+                                    {product.estoque > 0 ? 'Adicionar ao Carrinho' : 'Esgotado'}
+                                </button>
+                            </div>
+
+                            <div className="border-t border-[#333] pt-6 space-y-2 text-sm text-gray-500">
+                                <p className="flex items-center gap-2">✓ Pagamento 100% seguro</p>
+                                <p className="flex items-center gap-2">✓ Envio em até 24h</p>
+                                <p className="flex items-center gap-2">✓ Troca grátis em 30 dias</p>
+                            </div>
                         </div>
                     </div>
+
+                    {/* Related Products */}
+                    {relatedProducts.length > 0 && (
+                        <div className="mt-16">
+                            <h2 className="text-2xl font-bold text-white mb-6">Você também pode gostar</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                {relatedProducts.map((p) => (
+                                    <Link key={p.id} to={`/product/${p.id}`} className="card-dark block group">
+                                        <div className="h-48 overflow-hidden">
+                                            {p.img_prod_url ? (
+                                                <img src={p.img_prod_url} alt={p.nome} className="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-gray-500">Sem Imagem</div>
+                                            )}
+                                        </div>
+                                        <div className="p-4">
+                                            <h3 className="font-semibold mb-1 truncate text-white">{p.nome}</h3>
+                                            <p className="text-[#d4af37] font-bold">R$ {p.preco}</p>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
-
-                {/* Related Products */}
-                {relatedProducts.length > 0 && (
-                    <div className="mt-16">
-                        <h2 className="text-2xl font-bold mb-6">Você também pode gostar</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {relatedProducts.map((p) => (
-                                <Link key={p.id} to={`/product/${p.id}`} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition block">
-                                    <div className="h-48 bg-gray-100">
-                                        {p.img_prod_url ? (
-                                            <img src={p.img_prod_url} alt={p.nome} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-400">Sem Imagem</div>
-                                        )}
-                                    </div>
-                                    <div className="p-4">
-                                        <h3 className="font-semibold mb-1 truncate">{p.nome}</h3>
-                                        <p className="text-gray-900 font-bold">R$ {p.preco}</p>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                )}
             </div>
 
             {/* Sticky Buy Button */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 z-40">
+            <div className="fixed bottom-0 left-0 right-0 glass border-t border-[#333] p-4 z-40">
                 <div className="container mx-auto flex items-center justify-between">
                     <div>
-                        <p className="font-semibold text-lg">{product.nome}</p>
-                        <p className="text-2xl font-bold text-green-600">R$ {product.preco}</p>
+                        <p className="font-bold text-lg text-white">{product.nome}</p>
+                        <p className="text-2xl font-black text-gradient">R$ {product.current_price || product.preco}</p>
                     </div>
                     <button
                         onClick={addToCart}
-                        className="bg-black text-white py-3 px-8 rounded-lg font-semibold hover:bg-gray-800 transition flex items-center"
+                        disabled={product.estoque === 0}
+                        className="btn-primary py-3 px-8 flex items-center disabled:opacity-50"
                     >
                         <ShoppingCart size={20} className="mr-2" />
                         Comprar Agora
